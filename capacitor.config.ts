@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Chatty Pencil',
   webDir: 'out',
 	server: {
-		url: 'http://192.168.100.129:3000',
+		url: 'http://localhost:3000',
 		cleartext: true
 	}
 };

@@ -1,6 +1,34 @@
 {
   "lockfile_version": "1",
   "packages": {
+    "cocoapods@latest": {
+      "last_modified": "2025-11-23T21:50:36Z",
+      "resolved": "github:NixOS/nixpkgs/ee09932cedcef15aaf476f9343d1dea2cb77e261#cocoapods",
+      "source": "devbox-search",
+      "version": "1.16.2",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zaihyzkyvpisc3gw5kxzsil1jlnvlhq6-cocoapods-1.16.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zaihyzkyvpisc3gw5kxzsil1jlnvlhq6-cocoapods-1.16.2"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/9b15naymzghm2283yp3vhgjamjapb6a2-cocoapods-1.16.2",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/9b15naymzghm2283yp3vhgjamjapb6a2-cocoapods-1.16.2"
+        }
+      }
+    },
     "github:NixOS/nixpkgs/nixpkgs-unstable": {
       "last_modified": "2025-11-05T16:44:39Z",
       "resolved": "github:NixOS/nixpkgs/ffcdcf99d65c61956d882df249a9be53e5902ea5?lastModified=1762361079&narHash=sha256-lz718rr1BDpZBYk7%2BG8cE6wee3PiBUpn8aomG%2FvLLiY%3D"

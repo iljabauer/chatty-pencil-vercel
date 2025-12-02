@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     webSearch: boolean;
   } = await req.json();
   const result = streamText({
-    model: provider(model),
+    model: provider(model ?? "DevBoost/OpenAI/gpt-5.1"),
     messages: convertToModelMessages(messages),
     system:
       'You are a helpful assistant that can answer questions and help with tasks',
@@ -29,6 +29,6 @@ export async function POST(req: Request) {
   // send sources and reasoning back to the client
   return result.toUIMessageStreamResponse({
     sendSources: true,
-    sendReasoning: true,
+    sendReasoning: true
   });
 }
