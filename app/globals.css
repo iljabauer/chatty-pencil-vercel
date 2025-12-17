@@ -118,5 +118,15 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Ensure full viewport coverage and prevent scrolling */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  /* Support for safe areas on iOS devices */
+  html {
+    /* Extend background into safe areas */
+    background: var(--background);
   }
 }

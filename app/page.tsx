@@ -23,11 +23,6 @@ import {
   PromptInputButton,
   PromptInputHeader,
   type PromptInputMessage,
-  PromptInputSelect,
-  PromptInputSelectContent,
-  PromptInputSelectItem,
-  PromptInputSelectTrigger,
-  PromptInputSelectValue,
   PromptInputSubmit,
   PromptInputTextarea,
   PromptInputFooter,
@@ -61,7 +56,7 @@ const models = [
 ];
 const ChatBotDemo = () => {
   const [input, setInput] = useState('');
-  const [model, setModel] = useState<string>(models[0].value);
+  const [model] = useState<string>(models[0].value);
 
   const [inputMode, setInputMode] = useState<'canvas' | 'keyboard'>('canvas');
   const { messages, sendMessage, status, regenerate, setMessages } = useChat();
@@ -135,7 +130,12 @@ const ChatBotDemo = () => {
     setInput('');
   };
   return (
-    <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
+    <div className="max-w-4xl mx-auto relative size-full h-screen" style={{
+      paddingTop: 'max(3rem, env(safe-area-inset-top))',
+      paddingBottom: 'max(3rem, env(safe-area-inset-bottom))',
+      paddingLeft: 'max(1.5rem, env(safe-area-inset-left))',
+      paddingRight: 'max(1.5rem, env(safe-area-inset-right))',
+    }}>
       <div className="flex flex-col h-full">
         {/* Header with New Conversation Button */}
         <div className="flex justify-between items-center mb-4">
@@ -287,7 +287,7 @@ const ChatBotDemo = () => {
             </PromptInputBody>
           )}
           <PromptInputFooter>
-            <PromptInputTools className="flex-wrap gap-1">
+            <PromptInputTools>
               <PromptInputActionMenu>
                 <PromptInputActionMenuTrigger />
                 <PromptInputActionMenuContent>
@@ -295,7 +295,7 @@ const ChatBotDemo = () => {
                 </PromptInputActionMenuContent>
               </PromptInputActionMenu>
               
-              <PromptInputSelect value={model} onValueChange={setModel}>
+              {/*<PromptInputSelect value={model} onValueChange={setModel}>
                 <PromptInputSelectTrigger className="max-w-[180px]">
                   <PromptInputSelectValue placeholder="Select model" />
                 </PromptInputSelectTrigger>
@@ -306,7 +306,7 @@ const ChatBotDemo = () => {
                     </PromptInputSelectItem>
                   ))}
                 </PromptInputSelectContent>
-              </PromptInputSelect>
+              </PromptInputSelect>*/}
               
               {/* Input Mode Toggle Button */}
               <PromptInputButton
