@@ -92,14 +92,19 @@
     - Show indicator when unsaved content exists
     - Call `openCanvas()` on click
     - _Requirements: 6.1_
-  - [ ] 6.3 Implement canvas-first input area with keyboard toggle
+  - [ ] 6.3 Implement canvas-first input UI with keyboard toggle
     - Replace PromptInputTextarea with prominent "Open Canvas" button as the default input at bottom of chat
     - Display PromptInput.Footer below the canvas button (for images, websearch, model switching)
     - Add "Open Keyboard" button (small icon) in the footer area to toggle to text input mode
     - When in keyboard mode, show full PromptInput with PromptInputTextarea and a button to return to canvas mode
-    - Handle canvas submission result and send image as message attachment
     - Preserve unsaved canvas content when switching between input modes
-    - _Requirements: 2.4, 2.5, 6.1, 6.8, 6.9, 6.10, 6.11_
+    - _Requirements: 6.1, 6.8, 6.9, 6.10, 6.11_
+  - [ ] 6.4 Implement canvas submission handling
+    - Handle canvas submission result from openCanvas() hook
+    - Convert base64 PNG to proper image attachment format
+    - Send image as message attachment to chat
+    - Clear canvas state after successful submission
+    - _Requirements: 2.4, 2.5_
 
 - [ ] 7. Implement message display for canvas images
   - [ ] 7.1 Update Message component to display images
