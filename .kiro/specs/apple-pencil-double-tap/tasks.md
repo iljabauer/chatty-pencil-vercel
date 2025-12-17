@@ -40,14 +40,14 @@
     - Verify canvas overlay opens
     - _Requirements: 1.1, 1.3, 3.1_
 
-- [ ] 2. Implement canvas open from pencil tap with state preservation
-  - [ ] 2.1 Create internal openCanvasFromPencilTap method
+- [x] 2. Implement canvas open from pencil tap with state preservation
+  - [x] 2.1 Create internal openCanvasFromPencilTap method
     - Create method that opens canvas without requiring a Capacitor call
     - Reuse existing canvas presentation logic
     - Store a pending result handler for when canvas closes
     - _Requirements: 1.1, 1.2_
 
-  - [ ] 2.2 Handle canvas result from pencil-initiated open
+  - [x] 2.2 Handle canvas result from pencil-initiated open
     - When canvas closes (submit/minimize), resolve any pending web layer notification
     - Ensure preserved strokes are restored when opening
     - _Requirements: 1.2, 2.2, 2.3_
@@ -56,7 +56,7 @@
     - **Property 2: State preservation round-trip**
     - **Validates: Requirements 1.2, 2.2**
 
-  - [ ] 2.4 Human confirms: Strokes preserved on double-tap open
+  - [x] 2.4 Human confirms: Strokes preserved on double-tap open
     - Open canvas via button, draw some strokes
     - Minimize canvas via button
     - Double-tap Apple Pencil to reopen

@@ -16,6 +16,8 @@ npx cap sync
 * [`openCanvas(...)`](#opencanvas)
 * [`clearCanvas()`](#clearcanvas)
 * [`hasContent()`](#hascontent)
+* [`addListener('canvasMinimized' | 'canvasSubmitted' | 'canvasCancelled', ...)`](#addlistenercanvasminimized--canvassubmitted--canvascancelled-)
+* [`removeAllListeners()`](#removealllisteners)
 * [Interfaces](#interfaces)
 
 </docgen-index>
@@ -67,6 +69,35 @@ Checks if there's unsaved content on the canvas.
 --------------------
 
 
+### addListener('canvasMinimized' | 'canvasSubmitted' | 'canvasCancelled', ...)
+
+```typescript
+addListener(eventName: 'canvasMinimized' | 'canvasSubmitted' | 'canvasCancelled', listenerFunc: (event: CanvasResult) => void) => Promise<any>
+```
+
+Add listener for canvas events (pencil-initiated actions)
+
+| Param              | Type                                                                      |
+| ------------------ | ------------------------------------------------------------------------- |
+| **`eventName`**    | <code>'canvasMinimized' \| 'canvasSubmitted' \| 'canvasCancelled'</code>  |
+| **`listenerFunc`** | <code>(event: <a href="#canvasresult">CanvasResult</a>) =&gt; void</code> |
+
+**Returns:** <code>Promise&lt;any&gt;</code>
+
+--------------------
+
+
+### removeAllListeners()
+
+```typescript
+removeAllListeners() => Promise<void>
+```
+
+Remove all listeners for canvas events
+
+--------------------
+
+
 ### Interfaces
 
 
@@ -85,9 +116,12 @@ Result returned from canvas operations
 
 Options for opening the canvas
 
-| Prop                  | Type                | Description                                      |
-| --------------------- | ------------------- | ------------------------------------------------ |
-| **`backgroundColor`** | <code>string</code> | Background color for the canvas (default: white) |
+| Prop                    | Type                                 | Description                                                             |
+| ----------------------- | ------------------------------------ | ----------------------------------------------------------------------- |
+| **`backgroundColor`**   | <code>string</code>                  | Background color for the canvas (default: white)                        |
+| **`presentationStyle`** | <code>'sheet' \| 'fullScreen'</code> | Presentation style for iOS (default: sheet)                             |
+| **`showGrabber`**       | <code>boolean</code>                 | Show the drag indicator/grabber on iOS sheets (default: true)           |
+| **`allowMediumDetent`** | <code>boolean</code>                 | Allow medium detent on iOS sheets for half-screen mode (default: false) |
 
 
 #### HasContentResult

@@ -26,4 +26,16 @@ export class CanvasWeb extends WebPlugin implements CanvasPlugin {
     console.log('Web hasContent called');
     return { hasContent: false };
   }
+
+  async addListener(eventName: 'canvasMinimized' | 'canvasSubmitted' | 'canvasCancelled', listenerFunc: (event: CanvasResult) => void): Promise<any> {
+    console.log('Web addListener called for event:', eventName);
+    // For web, we can use the parent class's addListener method
+    return super.addListener(eventName, listenerFunc);
+  }
+
+  async removeAllListeners(): Promise<void> {
+    console.log('Web removeAllListeners called');
+    // For web, we can use the parent class's removeAllListeners method
+    return super.removeAllListeners();
+  }
 }
