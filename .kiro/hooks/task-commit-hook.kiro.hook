@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Task Completion Git Commit",
+  "description": "Automatically creates a git commit when task.md is saved, generating a commit message based on the context of completed tasks",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "task.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "A task.md file has been saved. Please analyze the current state of the task.md file and the recent changes in the workspace. Generate an appropriate git commit message that summarizes what tasks have been completed or updated, then execute a git commit with that message. The commit message should be concise but descriptive of the work accomplished."
+  }
+}

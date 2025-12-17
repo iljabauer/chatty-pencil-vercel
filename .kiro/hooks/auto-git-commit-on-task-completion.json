@@ -1,0 +1,9 @@
+{
+  "id": "auto-git-commit-on-task-completion",
+  "name": "Auto Git Commit on Task Completion",
+  "description": "Automatically creates a git commit with a descriptive message when a task is marked complete in tasks.md",
+  "eventType": "fileSaved",
+  "filePatterns": ["**/tasks.md"],
+  "hookAction": "sendMessage",
+  "outputPrompt": "A task has been completed and tasks.md was saved. Please create a git commit with a descriptive message based on the recent work done. Review the tasks.md file to understand what was accomplished and generate an appropriate commit message that summarizes the completed work."
+}
