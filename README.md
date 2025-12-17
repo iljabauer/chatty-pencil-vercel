@@ -1,36 +1,154 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chatty Pencil
 
-## Getting Started
+A handwriting-first ChatGPT experience for iPad that transforms natural drawing and writing into AI conversations. Draw, sketch, or write with Apple Pencil, then get AI responses in real-time.
 
-First, run the development server:
+## ✨ Features
+
+- **Native Apple Pencil Support**: Fullscreen canvas with PencilKit integration for smooth, low-latency drawing
+- **Handwriting-First Input**: Canvas button as the primary input method, with keyboard as secondary option
+- **Visual Conversations**: Submit drawings as images and receive streaming AI text responses
+- **Smart State Management**: Preserves unsaved canvas content when switching between input modes
+- **Seamless Integration**: Built with Vercel's AI Elements for consistent chat UI patterns
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Xcode 14+ (for iOS development)
+- iOS device or simulator with Apple Pencil support
+
+### Installation
 
 ```bash
+# Clone and install dependencies
+npm install
+
+# Install iOS dependencies
+npx cap sync ios
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### iOS Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Open in Xcode
+npx cap open ios
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Build and run on device/simulator
+```
 
-## Learn More
+## 🎨 How It Works
 
-To learn more about Next.js, take a look at the following resources:
+1. **Open Canvas**: Tap the canvas button to open a fullscreen drawing surface
+2. **Draw & Write**: Use Apple Pencil or touch to create handwritten content
+3. **Submit**: Tap submit to send your drawing as a chat message
+4. **AI Response**: Receive streaming text responses from the AI
+5. **Continue**: Switch between canvas and keyboard input as needed
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🏗️ Architecture
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Core Components
 
-## Deploy on Vercel
+- **Canvas Plugin** (`capacitor-canvas-plugin/`): Native iOS plugin with PencilKit integration
+- **useCanvasPlugin Hook** (`lib/useCanvasPlugin.ts`): React state management for canvas interactions
+- **ToggleCanvasButton** (`components/ToggleCanvasButton.tsx`): UI component with unsaved content indicators
+- **AI Elements Integration** (`app/page.tsx`): Chat interface using Vercel's AI SDK and UI components
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Key Technologies
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Frontend**: Next.js 16, React 19, TypeScript
+- **Mobile**: Capacitor 7 for native iOS integration
+- **Canvas**: PencilKit (iOS) for Apple Pencil support
+- **AI**: Vercel AI SDK with streaming responses
+- **UI**: Vercel AI Elements, Tailwind CSS, Radix UI
+
+## 📱 Canvas Plugin API
+
+The native canvas plugin provides three core methods:
+
+```typescript
+// Open fullscreen canvas
+const result = await Canvas.openCanvas({ backgroundColor: 'white' });
+
+// Check for unsaved content
+const { hasContent } = await Canvas.hasContent();
+
+// Clear preserved state
+await Canvas.clearCanvas();
+```
+
+### Canvas Results
+
+```typescript
+interface CanvasResult {
+  action: 'submitted' | 'minimized' | 'cancelled';
+  imageData?: string; // Base64 PNG (when submitted)
+  hasContent: boolean; // Whether canvas has strokes
+}
+```
+
+## 🔧 Development
+
+### Project Structure
+
+```
+├── app/                    # Next.js app directory
+├── components/             # React components
+├── lib/                    # Utilities and hooks
+├── capacitor-canvas-plugin/ # Native iOS plugin
+├── .kiro/specs/           # Feature specifications
+└── ios/                   # iOS app bundle
+```
+
+### Available Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run lint         # Run ESLint
+npm test             # Run tests
+npx cap sync ios     # Sync native dependencies
+npx cap open ios     # Open in Xcode
+```
+
+### Testing
+
+The project includes property-based tests for canvas functionality:
+
+- PNG export validation
+- State preservation on minimize/reopen
+- Empty canvas submission prevention
+- Content clearing verification
+
+## 📋 Requirements Status
+
+Based on the [specification](.kiro/specs/handwriting-canvas/requirements.md), current implementation status:
+
+- ✅ **Canvas Drawing**: Fullscreen canvas with Apple Pencil support
+- ✅ **Image Submission**: Convert drawings to PNG and send as chat messages
+- ✅ **Canvas Clearing**: Clear canvas state and strokes
+- ✅ **State Preservation**: Maintain drawings when minimizing canvas
+- ✅ **Toggle Interface**: Canvas button with unsaved content indicators
+- ✅ **Plugin Integration**: Native iOS plugin with React hooks
+- 🚧 **Canvas-First Input**: Primary canvas button implementation in progress
+- 🚧 **Message Display**: Image thumbnails in chat history
+- 🚧 **Auto-scroll**: Conversation scroll management
+- 🚧 **New Conversation**: Reset functionality
+
+## 🤝 Contributing
+
+1. Check the [implementation plan](.kiro/specs/handwriting-canvas/tasks.md) for current progress
+2. Review [requirements](.kiro/specs/handwriting-canvas/requirements.md) for feature specifications
+3. Follow the existing code patterns and TypeScript conventions
+4. Test on actual iOS devices with Apple Pencil when possible
+
+## 📄 License
+
+This project is part of a larger handwriting-focused chat application. See individual component licenses for details.
+
+---
+
+Built with ❤️ for natural, intuitive AI conversations through handwriting and drawing.
