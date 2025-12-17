@@ -1,0 +1,128 @@
+# Implementation Plan
+
+- [ ] 1. Create the minimal input bar container with pill styling
+  - [ ] 1.1 Create MinimalPromptInput component with pill-shaped container
+    - Create new component file `components/MinimalPromptInput.tsx`
+    - Implement flex container with rounded-full styling
+    - Add subtle border and background styling
+    - Set up three-section layout structure (left, center, right)
+    - _Requirements: 1.1, 1.5, 5.1, 5.2, 5.4_
+  - [ ] 1.2 Human verification: Verify pill container styling
+    - Open the app in browser/simulator
+    - Verify the input bar has a rounded pill shape
+    - Verify there's a subtle border around the container
+    - Verify the background is light/appropriate for the theme
+    - Approve if styling matches the reference image
+
+- [ ] 2. Implement the left section with input mode toggle button
+  - [ ] 2.1 Add toggle button to left section
+    - Add a circular button in the left section
+    - Implement onClick handler to toggle between 'canvas' and 'keyboard' modes
+    - Ensure minimum 44x44 touch target size
+    - _Requirements: 1.2, 2.1, 5.3_
+  - [ ] 2.2 Implement mode-dependent icon display
+    - Show "+" icon when in canvas mode
+    - Show pencil/pen icon when in keyboard mode
+    - _Requirements: 2.2, 2.3_
+  - [ ] 2.3 Human verification: Verify toggle button functionality
+    - Tap the toggle button on the left
+    - Verify the icon changes from "+" to pencil (or vice versa)
+    - Verify tapping again switches back
+    - Approve if toggle works correctly
+
+- [ ] 3. Implement the center section with mode-dependent content
+  - [ ] 3.1 Create CanvasPlaceholder component for canvas mode
+    - Create tappable area with placeholder text "Tap to draw"
+    - Wire up onClick to call openCanvas function
+    - Style to fill available space (flex-1)
+    - _Requirements: 3.1, 3.4_
+  - [ ] 3.2 Implement text input for keyboard mode
+    - Show text input field when in keyboard mode
+    - Wire up value and onChange for controlled input
+    - Style to match the minimal design (no visible border)
+    - _Requirements: 3.2_
+  - [ ] 3.3 Add unsaved content indicator for canvas mode
+    - Show visual indicator (dot or highlight) when hasUnsavedContent is true
+    - Update placeholder text to "Continue drawing" when content exists
+    - _Requirements: 3.3_
+  - [ ] 3.4 Human verification: Verify center section behavior
+    - In canvas mode: tap the center area and verify canvas opens
+    - Switch to keyboard mode: verify text input appears
+    - Type some text and verify it's captured
+    - Switch back to canvas mode: verify placeholder shows
+    - Approve if center section adapts correctly to mode
+
+- [ ] 4. Implement the right section with send/stop button
+  - [ ] 4.1 Add send button to right section
+    - Add circular button in the right section
+    - Show send icon (arrow or similar) by default
+    - Ensure minimum 44x44 touch target size
+    - _Requirements: 1.4, 5.3_
+  - [ ] 4.2 Implement content-aware button state
+    - Disable button when no content (empty text in keyboard mode, no canvas content in canvas mode)
+    - Enable button when there's content to send
+    - _Requirements: 4.1, 4.2_
+  - [ ] 4.3 Implement streaming state display
+    - Show stop icon (square) when status is 'streaming'
+    - Handle stop action on click during streaming
+    - _Requirements: 4.3, 4.5_
+  - [ ] 4.4 Human verification: Verify send button behavior
+    - In keyboard mode with empty input: verify button is disabled/dimmed
+    - Type some text: verify button becomes enabled
+    - Clear text: verify button becomes disabled again
+    - In canvas mode with no content: verify button state
+    - Approve if send button state reflects content availability
+
+- [ ] 5. Integrate MinimalPromptInput into the main page
+  - [ ] 5.1 Replace current PromptInput usage with MinimalPromptInput
+    - Update `app/page.tsx` to use the new component
+    - Pass all required props (inputMode, handlers, status, etc.)
+    - Preserve existing canvas plugin integration
+    - Preserve existing submission handling
+    - _Requirements: All_
+  - [ ] 5.2 Ensure canvas content preservation across mode switches
+    - Verify hasUnsavedContent state persists when switching modes
+    - _Requirements: 2.4_
+  - [ ] 5.3 Human verification: Full integration test
+    - Open the app and verify the new minimal input bar appears
+    - Toggle between canvas and keyboard modes
+    - In canvas mode: open canvas, draw something, minimize
+    - Verify the unsaved content indicator appears
+    - Switch to keyboard mode and back: verify content indicator persists
+    - Submit a message (text or canvas) and verify it works
+    - Approve if full flow works correctly
+
+- [ ] 6. Final polish and cleanup
+  - [ ] 6.1 Remove old input mode toggle from footer
+    - Remove the "Switch to keyboard/canvas" button from PromptInputFooter
+    - Clean up any unused imports or code
+    - _Requirements: 1.1_
+  - [ ] 6.2 Adjust spacing and visual refinements
+    - Fine-tune padding and gaps for optimal appearance
+    - Ensure consistent styling across light/dark modes
+    - _Requirements: 5.2, 5.4_
+  - [ ] 6.3 Human verification: Final visual review
+    - Review the input bar in both light and dark modes (if applicable)
+    - Verify spacing looks balanced and professional
+    - Compare with the reference image
+    - Approve if the final result matches expectations
+
+- [ ]* 7. Write property-based tests
+  - [ ]* 7.1 Write property test for three-section layout
+    - **Property 1: Three-section layout structure**
+    - **Validates: Requirements 1.1, 1.2, 1.3, 1.4**
+  - [ ]* 7.2 Write property test for mode toggle
+    - **Property 2: Input mode toggle changes mode**
+    - **Validates: Requirements 2.1**
+  - [ ]* 7.3 Write property test for icon display
+    - **Property 3: Icon reflects current mode**
+    - **Validates: Requirements 2.2, 2.3**
+  - [ ]* 7.4 Write property test for content preservation
+    - **Property 4: Canvas content preserved across mode switches**
+    - **Validates: Requirements 2.4**
+  - [ ]* 7.5 Write property test for center area content
+    - **Property 5: Center area content matches mode**
+    - **Validates: Requirements 3.1, 3.2**
+  - [ ]* 7.6 Write property test for send button state
+    - **Property 7: Send button state reflects content availability**
+    - **Validates: Requirements 4.1, 4.2**
