@@ -63,15 +63,14 @@ const ChatBotDemo = () => {
   const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, regenerate } = useChat();
   
-  // Test functions for different canvas presentation styles
+  // Test functions for canvas presentation styles
   const testCanvasSheet = async () => {
     try {
       console.log('Opening canvas with sheet presentation...');
       const result = await Canvas.openCanvas({
         presentationStyle: 'sheet',
         showGrabber: true,
-        allowMediumDetent: false,
-        sheetSize: 'large'
+        allowMediumDetent: false
       });
       console.log('Canvas result:', result);
       
@@ -83,54 +82,6 @@ const ChatBotDemo = () => {
         alert(`Canvas minimized. Has content: ${result.hasContent}`);
       } else {
         console.log('Canvas cancelled');
-        alert('Canvas cancelled');
-      }
-    } catch (error) {
-      console.error('Canvas error:', error);
-      alert(`Canvas error: ${error}`);
-    }
-  };
-
-  const testCanvasExtraLarge = async () => {
-    try {
-      console.log('Opening canvas with extra large sheet...');
-      const result = await Canvas.openCanvas({
-        presentationStyle: 'sheet',
-        showGrabber: true,
-        allowMediumDetent: false,
-        sheetSize: 'extraLarge'
-      });
-      console.log('Canvas result:', result);
-      
-      if (result.action === 'submitted' && result.imageData) {
-        alert(`Canvas submitted! Image data length: ${result.imageData.length}`);
-      } else if (result.action === 'minimized') {
-        alert(`Canvas minimized. Has content: ${result.hasContent}`);
-      } else {
-        alert('Canvas cancelled');
-      }
-    } catch (error) {
-      console.error('Canvas error:', error);
-      alert(`Canvas error: ${error}`);
-    }
-  };
-
-  const testCanvasFullHeight = async () => {
-    try {
-      console.log('Opening canvas with full height sheet...');
-      const result = await Canvas.openCanvas({
-        presentationStyle: 'sheet',
-        showGrabber: true,
-        allowMediumDetent: false,
-        sheetSize: 'fullHeight'
-      });
-      console.log('Canvas result:', result);
-      
-      if (result.action === 'submitted' && result.imageData) {
-        alert(`Canvas submitted! Image data length: ${result.imageData.length}`);
-      } else if (result.action === 'minimized') {
-        alert(`Canvas minimized. Has content: ${result.hasContent}`);
-      } else {
         alert('Canvas cancelled');
       }
     } catch (error) {
@@ -195,24 +146,6 @@ const ChatBotDemo = () => {
               Sheet (Default)
             </Button>
             <Button 
-              onClick={testCanvasExtraLarge}
-              className="flex items-center gap-2"
-              variant="outline"
-              size="sm"
-            >
-              <PenToolIcon className="size-4" />
-              Extra Large Sheet
-            </Button>
-            <Button 
-              onClick={testCanvasFullHeight}
-              className="flex items-center gap-2"
-              variant="outline"
-              size="sm"
-            >
-              <PenToolIcon className="size-4" />
-              Full Height Sheet
-            </Button>
-            <Button 
               onClick={testCanvasFullScreen}
               className="flex items-center gap-2"
               variant="outline"
@@ -223,9 +156,7 @@ const ChatBotDemo = () => {
             </Button>
           </div>
           <div className="text-xs text-blue-700 mt-2 space-y-1">
-            <p><strong>Sheet (Default):</strong> Standard iOS sheet (~70% height)</p>
-            <p><strong>Extra Large Sheet:</strong> Bigger sheet (~95% height)</p>
-            <p><strong>Full Height Sheet:</strong> Nearly full screen sheet (~98% height)</p>
+            <p><strong>Sheet (Default):</strong> iOS overlay that slides up from bottom with drag handle</p>
             <p><strong>Full Screen:</strong> Traditional full-screen presentation</p>
           </div>
         </div>
