@@ -1,0 +1,220 @@
+# Implementation Plan
+
+- [ ] 1. Set up Capacitor plugin infrastructure
+  - [ ] 1.1 Create JavaScript plugin interface and registration
+    - Create `lib/canvas-plugin.ts` with TypeScript interfaces
+    - Define `CanvasPlugin` interface with `openCanvas()`, `clearCanvas()`, `hasContent()` methods
+    - Register plugin with Capacitor using `registerPlugin()`
+    - _Requirements: 6.1, 6.2_
+  - [ ] 1.2 Create native Swift plugin skeleton
+    - Create `ios/App/App/Plugins/CanvasPlugin.swift`
+    - Implement `CAPPlugin` subclass with `@objc` method stubs
+    - Register plugin in Capacitor configuration
+    - _Requirements: 6.2, 6.3_
+  - [ ] 1.3 Write unit tests for plugin interface
+    - Test plugin registration
+    - Test method signatures match interface
+    - _Requirements: 6.1, 6.2_
+  - [ ] 1.4 Manual test: Verify plugin bridge works
+    - Add temporary button that calls `Canvas.hasContent()` and logs result
+    - Build and run on iPad simulator
+    - Verify console shows `{ hasContent: false }` response from native
+    - _Requirements: 6.1_
+
+- [ ] 2. Implement native canvas view controller
+  - [ ] 2.1 Create CanvasViewController with PencilKit
+    - Create `ios/App/App/Plugins/CanvasViewController.swift`
+    - Set up `PKCanvasView` with full-screen layout
+    - Configure `PKToolPicker` for drawing tools
+    - Implement delegate protocol for communication back to plugin
+    - _Requirements: 1.1, 1.2, 1.3_
+  - [ ] 2.2 Implement canvas toolbar UI
+    - Add submit button (sends drawing)
+    - Add clear button (clears canvas)
+    - Add minimize button (dismisses without clearing)
+    - Style toolbar for iPad
+    - _Requirements: 2.1, 3.1, 6.4_
+  - [ ] 2.3 Implement PNG export from PKDrawing
+    - Convert `PKDrawing` to `UIImage`
+    - Export as PNG data
+    - Encode to base64 string
+    - _Requirements: 2.1_
+  - [ ] 2.4 Write property test for PNG export validity
+    - **Property 1: Export produces valid base64 PNG when canvas has content**
+    - **Validates: Requirements 2.1**
+  - [ ] 2.5 Manual test: Verify canvas view displays and drawing works
+    - Add temporary button that calls `Canvas.openCanvas()`
+    - Build and run on iPad simulator
+    - Verify fullscreen canvas appears with toolbar
+    - Draw with mouse/trackpad (simulates Apple Pencil)
+    - Verify strokes appear on canvas
+    - _Requirements: 1.1, 1.2, 6.2_
+
+- [ ] 3. Implement plugin bridge methods
+  - [ ] 3.1 Implement openCanvas() in Swift
+    - Present `CanvasViewController` modally over web view
+    - Handle delegate callbacks for submit/minimize/cancel
+    - Resolve Capacitor promise with appropriate result
+    - _Requirements: 6.2, 6.3_
+  - [ ] 3.2 Implement canvas state preservation
+    - Store `PKDrawing` in static property on minimize
+    - Restore drawing when canvas reopens
+    - Clear preserved state on submit or explicit clear
+    - _Requirements: 6.5, 6.6_
+  - [ ] 3.3 Write property test for minimize/reopen round-trip
+    - **Property 9: Minimize/reopen preserves drawing (round-trip)**
+    - **Validates: Requirements 6.5, 6.6**
+  - [ ] 3.4 Implement clearCanvas() in Swift
+    - Clear preserved `PKDrawing` state
+    - Clear current canvas if open
+    - _Requirements: 3.1, 7.2_
+  - [ ] 3.5 Write property test for clear removes content
+    - **Property 5: Clear removes all canvas content**
+    - **Validates: Requirements 3.1**
+  - [ ] 3.6 Implement hasContent() in Swift
+    - Check if preserved drawing has strokes
+    - Check if current canvas has strokes
+    - Return boolean result
+    - _Requirements: 2.3, 6.5_
+  - [ ] 3.7 Manual test: Verify state preservation on minimize
+    - Open canvas, draw something, tap minimize
+    - Call `hasContent()` and verify returns `true`
+    - Reopen canvas and verify drawing is restored
+    - _Requirements: 6.5, 6.6_
+
+- [ ] 4. Implement submission flow
+  - [ ] 4.1 Implement submit action in CanvasViewController
+    - Validate canvas has content before allowing submit
+    - Export PNG and return via delegate
+    - Clear preserved state after successful submit
+    - Dismiss view controller
+    - _Requirements: 2.1, 2.2, 2.3, 6.7_
+  - [ ] 4.2 Write property test for submit clears state
+    - **Property 2: Submit clears preserved canvas state**
+    - **Validates: Requirements 2.2**
+  - [ ] 4.3 Write property test for empty canvas prevents submission
+    - **Property 3: Empty canvas prevents submission with image**
+    - **Validates: Requirements 2.3**
+  - [ ] 4.4 Manual test: Verify submit flow end-to-end
+    - Open canvas, draw something, tap submit
+    - Verify canvas closes
+    - Verify `hasContent()` returns `false` after submit
+    - Log the returned base64 image data to console
+    - _Requirements: 2.1, 2.2, 6.7_
+
+- [ ] 5. Checkpoint - Ensure native plugin tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 6. Integrate canvas plugin with chat UI
+  - [ ] 6.1 Create useCanvasPlugin hook
+    - Wrap plugin methods in React hook
+    - Track `isCanvasOpen` and `hasUnsavedContent` state
+    - Handle plugin results and update chat
+    - _Requirements: 6.1, 6.2_
+  - [ ] 6.2 Create ToggleCanvasButton component
+    - Display pencil/canvas icon button
+    - Show indicator when unsaved content exists
+    - Call `openCanvas()` on click
+    - _Requirements: 6.1_
+  - [ ] 6.3 Write property test for toggle opens canvas
+    - **Property 8: Toggle button opens native canvas**
+    - **Validates: Requirements 6.2**
+  - [ ] 6.4 Update chat page to use canvas input
+    - Replace or augment existing PromptInput with ToggleCanvasButton
+    - Handle canvas submission result
+    - Send image as message attachment
+    - _Requirements: 2.4, 2.5_
+  - [ ] 6.5 Write property test for submitted image in messages
+    - **Property 4: Submitted image appears in messages**
+    - **Validates: Requirements 2.4, 2.5**
+  - [ ] 6.6 Manual test: Verify canvas button and submission in chat
+    - Verify Toggle Canvas button appears in chat view
+    - Tap button, draw, submit
+    - Verify image appears in chat as user message
+    - Verify AI responds to the image
+    - _Requirements: 6.1, 2.4, 2.5_
+
+- [ ] 7. Implement message display for canvas images
+  - [ ] 7.1 Update Message component to display images
+    - Detect messages with image attachments
+    - Render thumbnail of submitted canvas image
+    - Support tap to expand image
+    - _Requirements: 5.4_
+  - [ ] 7.2 Style canvas message display
+    - Thumbnail sizing and aspect ratio
+    - Visual distinction from text messages
+    - _Requirements: 5.4_
+  - [ ] 7.3 Manual test: Verify image display in conversation
+    - Submit multiple canvas drawings
+    - Verify each appears as thumbnail in chat
+    - Tap thumbnail to expand and verify full image displays
+    - _Requirements: 5.4_
+
+- [ ] 8. Implement conversation management
+  - [ ] 8.1 Add new conversation button
+    - Create button in chat header
+    - Clear messages array on click
+    - Call `clearCanvas()` to reset canvas state
+    - _Requirements: 7.1, 7.2_
+  - [ ] 8.2 Write property test for new conversation reset
+    - **Property 11: New conversation resets all state**
+    - **Validates: Requirements 7.1, 7.2**
+  - [ ] 8.3 Manual test: Verify new conversation clears everything
+    - Have a conversation with multiple messages
+    - Draw on canvas but don't submit (minimize)
+    - Tap new conversation button
+    - Verify chat is empty
+    - Open canvas and verify it's blank
+    - _Requirements: 7.1, 7.2_
+
+- [ ] 9. Implement auto-scroll behavior
+  - [ ] 9.1 Implement auto-scroll on new message
+    - Scroll to bottom when new message added
+    - Only auto-scroll if user is at bottom
+    - _Requirements: 5.2, 5.3_
+  - [ ] 9.2 Write property test for auto-scroll behavior
+    - **Property 6: Auto-scroll on new message**
+    - **Validates: Requirements 5.2**
+  - [ ] 9.3 Write property test for manual scroll pause
+    - **Property 7: Manual scroll pauses auto-scroll**
+    - **Validates: Requirements 5.3**
+  - [ ] 9.4 Manual test: Verify scroll behavior
+    - Have a long conversation that requires scrolling
+    - Submit new canvas drawing
+    - Verify chat auto-scrolls to show new message
+    - Scroll up manually, submit another drawing
+    - Verify chat does NOT auto-scroll (stays where user scrolled)
+    - _Requirements: 5.2, 5.3_
+
+- [ ] 10. Checkpoint - Ensure all JavaScript tests pass
+  - Ensure all tests pass, ask the user if questions arise.
+
+- [ ] 11. Handle streaming responses
+  - [ ] 11.1 Verify streaming display works with canvas messages
+    - Test AI response streaming after canvas submission
+    - Ensure loader displays during streaming
+    - Verify markdown rendering in responses
+    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+  - [ ] 11.2 Manual test: Verify streaming after canvas submission
+    - Submit a canvas drawing with handwritten question
+    - Verify loader appears while waiting
+    - Verify AI response streams in character by character
+    - Verify loader disappears when complete
+    - _Requirements: 4.1, 4.2, 4.3_
+
+- [ ] 12. Implement submit closes overlay behavior
+  - [ ] 12.1 Ensure canvas dismisses on submit
+    - Verify view controller dismissal after submit
+    - Update `isCanvasOpen` state in JS
+    - _Requirements: 6.7_
+  - [ ] 12.2 Write property test for submit closes canvas
+    - **Property 10: Submit closes canvas and returns to chat**
+    - **Validates: Requirements 6.7**
+  - [ ] 12.3 Manual test: Verify submit dismisses canvas overlay
+    - Open canvas, draw, tap submit
+    - Verify canvas overlay closes immediately
+    - Verify chat view is visible with new message
+    - _Requirements: 6.7_
+
+- [ ] 13. Final Checkpoint - Ensure all tests pass
+  - Ensure all tests pass, ask the user if questions arise.
