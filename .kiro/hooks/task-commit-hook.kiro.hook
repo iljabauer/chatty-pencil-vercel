@@ -4,11 +4,14 @@
   "description": "Automatically creates a git commit when task.md is saved, generating a commit message based on the context of completed tasks",
   "version": "1",
   "when": {
-    "type": "userTriggered"
+    "type": "fileEdited",
+    "patterns": [
+      ".kiro/specs/**/tasks.md"
+    ]
   },
   "then": {
     "type": "askAgent",
-    "prompt": "A tasks.md file has been saved. Please analyze the current state of the tasks.md file and the recent changes in the workspace. Generate an appropriate git commit message that summarizes what tasks have been completed or updated, then execute a git commit with that message. The commit message should be concise but descriptive of the work accomplished."
+    "prompt": "A tasks.md file has been saved. Please analyze the current state of the tasks.md file and the recent changes in the workspace (`git status --porcelain`). Generate an appropriate git commit message that summarizes what tasks have been completed or updated, then execute a git commit with that message. The commit message should be concise but descriptive of the work accomplished."
   },
   "workspaceFolderName": "chatty-pencil",
   "shortName": "task-commit-hook"
