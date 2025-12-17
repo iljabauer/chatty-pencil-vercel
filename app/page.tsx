@@ -179,10 +179,14 @@ const ChatBotDemo = () => {
                 {message.parts.map((part, i) => {
                   switch (part.type) {
                     case 'text':
-                      // Skip rendering empty text parts (e.g., canvas-only messages)
-                      if (!part.text?.trim()) return null;
+                      // Hide empty text parts visually (e.g., canvas-only messages)
+                      const isEmpty = !part.text?.trim();
                       return (
-                        <Message key={`${message.id}-${i}`} from={message.role}>
+                        <Message 
+                          key={`${message.id}-${i}`} 
+                          from={message.role}         
+                          className={isEmpty ? 'sr-only' : ''}
+                        >
                           <MessageContent>
                             <MessageResponse>
                               {part.text}
@@ -220,11 +224,6 @@ const ChatBotDemo = () => {
                                   alt={part.filename || 'Canvas drawing'} 
                                   className="rounded-lg border shadow-sm max-w-full h-auto"
                                 />
-                                {part.filename && (
-                                  <p className="text-sm text-gray-500 mt-2">
-                                    {part.filename}
-                                  </p>
-                                )}
                               </div>
                             </MessageContent>
                           </Message>
