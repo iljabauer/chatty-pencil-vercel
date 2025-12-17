@@ -6,7 +6,8 @@
     - Define `CanvasPlugin` interface with `openCanvas()`, `clearCanvas()`, `hasContent()` methods
     - Register plugin with Capacitor using `registerPlugin()`
     - _Requirements: 6.1, 6.2_
-  - [ ] 1.2 Create native Swift plugin skeleton
+  - [x] 1.2 Create native Swift plugin skeleton
+    - Use `npm init @capacitor/plugin` to create a plugin and register it properly
     - Create `ios/App/App/Plugins/CanvasPlugin.swift`
     - Implement `CAPPlugin` subclass with `@objc` method stubs
     - Register plugin in Capacitor configuration
