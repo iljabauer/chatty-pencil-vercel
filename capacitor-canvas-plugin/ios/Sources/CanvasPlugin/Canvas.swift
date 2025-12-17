@@ -74,6 +74,13 @@ class CanvasViewController: UIViewController {
         canvasView.backgroundColor = backgroundColor == "white" ? UIColor.white : UIColor.systemBackground
         canvasView.isOpaque = false
         
+        // Only allow drawing with Apple Pencil, disable finger drawing
+        if #available(iOS 14.0, *) {
+            canvasView.drawingPolicy = .pencilOnly
+        } else {
+            canvasView.allowsFingerDrawing = false
+        }
+        
         view.addSubview(canvasView)
         
         NSLayoutConstraint.activate([

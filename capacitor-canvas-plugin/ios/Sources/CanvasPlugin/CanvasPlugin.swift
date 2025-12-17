@@ -211,9 +211,10 @@ public class CanvasPlugin: CAPPlugin, CAPBridgedPlugin {
 @available(iOS 12.1, *)
 extension CanvasPlugin: PencilInteractionManagerDelegate {
     public func pencilInteractionDidRequestToggle() {
-        if isCanvasOpen {
-            minimizeCanvasFromPencilTap()
-        } else {
+        // Only handle pencil tap when canvas is closed
+        // When canvas is open, let PKToolPicker handle the double-tap
+        // (e.g., switch to eraser based on user's system preference)
+        if !isCanvasOpen {
             openCanvasFromPencilTap()
         }
     }

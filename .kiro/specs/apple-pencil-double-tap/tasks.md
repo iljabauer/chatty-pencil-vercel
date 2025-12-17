@@ -63,14 +63,14 @@
     - Verify previous strokes are restored
     - _Requirements: 1.2_
 
-- [ ] 3. Implement canvas minimize from pencil tap
-  - [ ] 3.1 Add UIPencilInteraction to CanvasViewController
+- [x] 3. Implement canvas minimize from pencil tap
+  - [x] 3.1 Add UIPencilInteraction to CanvasViewController
     - In `viewDidLoad()`, create and add `UIPencilInteraction` to view
     - Set delegate to self
     - Implement `pencilInteractionDidTap(_:)` to call minimize
     - _Requirements: 2.1, 3.2_
 
-  - [ ] 3.2 Create programmatic minimize method
+  - [x] 3.2 Create programmatic minimize method
     - Extract minimize logic from `minimizeTapped()` into reusable method
     - Call this method from both button tap and pencil double-tap
     - Ensure strokes are preserved before dismissing
@@ -80,7 +80,7 @@
     - **Property 3: Minimize notification includes content state**
     - **Validates: Requirements 2.3**
 
-  - [ ] 3.4 Human confirms: Double-tap minimizes canvas and preserves strokes
+  - [x] 3.4 Human confirms: Double-tap minimizes canvas and preserves strokes
     - Open canvas (via button or double-tap)
     - Draw some strokes on canvas
     - Double-tap Apple Pencil while canvas is open
