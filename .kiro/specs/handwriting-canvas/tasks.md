@@ -106,26 +106,26 @@
     - Clear canvas state after successful submission
     - _Requirements: 2.4, 2.5_
 
-- [ ] 7. Implement message display for canvas images
-  - [ ] 7.1 Update Message component to display images
+- [x] 7. Implement message display for canvas images
+  - [x] 7.1 Update Message component to display images
     - Detect messages with image attachments
     - Render thumbnail of submitted canvas image
     - Support tap to expand image
     - _Requirements: 5.4_
-  - [ ] 7.2 Style canvas message display
+  - [x] 7.2 Style canvas message display
     - Thumbnail sizing and aspect ratio
     - Visual distinction from text messages
     - _Requirements: 5.4_
 
-- [ ] 8. Implement conversation management
-  - [ ] 8.1 Add new conversation button
+- [x] 8. Implement conversation management
+  - [x] 8.1 Add new conversation button
     - Create button in chat header
     - Clear messages array on click
     - Call `clearCanvas()` to reset canvas state
     - _Requirements: 7.1, 7.2_
 
-- [ ] 9. Implement auto-scroll behavior
-  - [ ] 9.1 Implement auto-scroll on new message
+- [x] 9. Implement auto-scroll behavior
+  - [x] 9.1 Implement auto-scroll on new message
     - Scroll to bottom when new message added
     - Only auto-scroll if user is at bottom
     - _Requirements: 5.2, 5.3_
@@ -150,18 +150,18 @@
     - **Property 11: New conversation resets all state**
     - **Validates: Requirements 7.1, 7.2**
 
-- [ ] 11. Final integration and testing
-  - [ ] 11.1 Verify streaming display works with canvas messages
+- [x] 11. Final integration and testing
+  - [x] 11.1 Verify streaming display works with canvas messages
     - Test AI response streaming after canvas submission
     - Ensure loader displays during streaming
     - Verify markdown rendering in responses
     - _Requirements: 4.1, 4.2, 4.3, 4.4_
-  - [ ] 11.2 End-to-end manual testing
+  - [x] 11.2 End-to-end manual testing
     - Test complete canvas submission flow
     - Verify image display in conversation
     - Test new conversation reset
     - Test auto-scroll behavior
     - _Requirements: All requirements_
 
-- [ ] 12. Final Checkpoint - Ensure all tests pass
+- [x] 12. Final Checkpoint - Ensure all tests pass
   - Ensure all tests pass, ask the user if questions arise.
