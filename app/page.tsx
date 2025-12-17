@@ -13,10 +13,6 @@ import {
 } from '@/components/ai-elements/message';
 import {
   PromptInput,
-  PromptInputActionAddAttachments,
-  PromptInputActionMenu,
-  PromptInputActionMenuContent,
-  PromptInputActionMenuTrigger,
   PromptInputAttachment,
   PromptInputAttachments,
   PromptInputBody,
@@ -288,38 +284,22 @@ const ChatBotDemo = () => {
           )}
           <PromptInputFooter>
             <PromptInputTools>
-              <PromptInputActionMenu>
-                <PromptInputActionMenuTrigger />
-                <PromptInputActionMenuContent>
-                  <PromptInputActionAddAttachments />
-                </PromptInputActionMenuContent>
-              </PromptInputActionMenu>
-              
-              {/*<PromptInputSelect value={model} onValueChange={setModel}>
-                <PromptInputSelectTrigger className="max-w-[180px]">
-                  <PromptInputSelectValue placeholder="Select model" />
-                </PromptInputSelectTrigger>
-                <PromptInputSelectContent>
-                  {models.map((m) => (
-                    <PromptInputSelectItem key={m.value} value={m.value}>
-                      {m.name}
-                    </PromptInputSelectItem>
-                  ))}
-                </PromptInputSelectContent>
-              </PromptInputSelect>*/}
-              
               {/* Input Mode Toggle Button */}
               <PromptInputButton
                 onClick={() => setInputMode(inputMode === 'canvas' ? 'keyboard' : 'canvas')}
                 variant="ghost"
+                size="sm"
+                className="flex items-center gap-2"
               >
                 {inputMode === 'canvas' ? (
                   <>
                     <KeyboardIcon className="size-4" />
+                    <span>Switch to keyboard</span>
                   </>
                 ) : (
                   <>
                     <PenToolIcon className="size-4" />
+                    <span>Switch to canvas</span>
                   </>
                 )}
               </PromptInputButton>
