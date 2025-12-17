@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "cd capacitor-canvas-plugin && npm install && npm run build"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^1.0.28",
