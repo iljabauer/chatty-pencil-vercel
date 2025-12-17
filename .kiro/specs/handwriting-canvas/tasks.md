@@ -16,7 +16,7 @@
     - Test plugin registration
     - Test method signatures match interface
     - _Requirements: 6.1, 6.2_
-  - [ ] 1.4 Manual test: Verify plugin bridge works
+  - [x] 1.4 Manual test: Verify plugin bridge works
     - Add temporary button that calls `Canvas.hasContent()` and logs result
     - Build and run on iPad simulator
     - Verify console shows `{ hasContent: false }` response from native
