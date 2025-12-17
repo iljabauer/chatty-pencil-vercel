@@ -82,12 +82,12 @@
     - **Validates: Requirements 6.5, 6.6**
 
 - [ ] 6. Integrate canvas plugin with chat UI
-  - [ ] 6.1 Create useCanvasPlugin hook
+  - [x] 6.1 Create useCanvasPlugin hook
     - Wrap plugin methods in React hook
     - Track `isCanvasOpen` and `hasUnsavedContent` state
     - Handle plugin results and update chat
     - _Requirements: 6.1, 6.2_
-  - [ ] 6.2 Create ToggleCanvasButton component
+  - [x] 6.2 Create ToggleCanvasButton component
     - Display pencil/canvas icon button
     - Show indicator when unsaved content exists
     - Call `openCanvas()` on click
