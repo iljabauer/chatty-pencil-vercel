@@ -77,13 +77,17 @@ Chatty Pencil is a handwriting-first, general-purpose ChatGPT experience for iPa
 
 #### Acceptance Criteria
 
-1. WHEN a user is in the chat view THEN the System SHALL display a "Toggle Canvas" button as the primary input method
-2. WHEN a user taps the "Toggle Canvas" button THEN the System SHALL open a fullscreen canvas overlay covering the chat view
+1. WHEN a user is in the chat view THEN the System SHALL display a prominent "Open Canvas" button as the primary and default input method at the bottom of the screen
+2. WHEN a user taps the "Open Canvas" button THEN the System SHALL open a fullscreen canvas overlay covering the chat view
 3. WHEN the fullscreen canvas overlay is open THEN the System SHALL be the only place where drawing input is accepted
 4. WHEN the canvas overlay is open THEN the System SHALL display a minimize button to return to chat view
 5. WHEN a user minimizes the canvas without submitting THEN the System SHALL preserve all strokes on the canvas
 6. WHEN a user reopens the canvas after minimizing THEN the System SHALL restore the previously drawn strokes
 7. WHEN the canvas is submitted THEN the System SHALL close the canvas overlay and return to chat view
+8. WHEN a user taps the "Open Keyboard" button THEN the System SHALL replace the canvas button with a text input field
+9. WHEN the text input mode is active THEN the System SHALL display a button to return to canvas input mode
+10. WHEN switching between input modes THEN the System SHALL preserve any unsaved canvas content
+11. WHEN in canvas input mode THEN the System SHALL display the input footer (images, websearch, model switching) below the canvas button
 
 ### Requirement 7
 
