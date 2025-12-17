@@ -96,7 +96,7 @@
   - [ ] 4.3 Write property test for empty canvas prevents submission
     - **Property 3: Empty canvas prevents submission with image**
     - **Validates: Requirements 2.3**
-  - [ ] 4.4 Manual test: Verify submit flow end-to-end
+  - [x] 4.4 Manual test: Verify submit flow end-to-end
     - Open canvas, draw something, tap submit
     - Verify canvas closes
     - Verify `hasContent()` returns `false` after submit

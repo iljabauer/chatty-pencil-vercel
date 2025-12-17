@@ -8,7 +8,7 @@
   },
   "then": {
     "type": "askAgent",
-    "prompt": "A tasks.md file has been saved. Please analyze the current state of the tasks.md file and the recent changes in the workspace (`git status --porcelain`). Generate an appropriate git commit message that summarizes what tasks have been completed or updated, then execute a git commit with that message. The commit message should be concise but descriptive of the work accomplished."
+    "prompt": "A tasks.md file has been saved. Please analyze the current state of the tasks.md file and the recent changes in the workspace (`git status --porcelain`, git --no-pager diff). Generate an appropriate git commit message that summarizes what tasks have been completed or updated, then execute a git commit with that message. The commit message should be concise but descriptive of the work accomplished."
   },
   "workspaceFolderName": "chatty-pencil",
   "shortName": "task-commit-hook"

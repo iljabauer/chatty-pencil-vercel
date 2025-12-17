@@ -63,22 +63,95 @@ const ChatBotDemo = () => {
   const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, regenerate } = useChat();
   
-  // Temporary test function for canvas
-  const testCanvas = async () => {
+  // Test functions for different canvas presentation styles
+  const testCanvasSheet = async () => {
     try {
-      console.log('Opening canvas...');
-      const result = await Canvas.openCanvas();
+      console.log('Opening canvas with sheet presentation...');
+      const result = await Canvas.openCanvas({
+        presentationStyle: 'sheet',
+        showGrabber: true,
+        allowMediumDetent: false,
+        sheetSize: 'large'
+      });
       console.log('Canvas result:', result);
       
       if (result.action === 'submitted' && result.imageData) {
         console.log('Canvas submitted with image data length:', result.imageData.length);
-        // For testing, we'll just log the result
         alert(`Canvas submitted! Image data length: ${result.imageData.length}`);
       } else if (result.action === 'minimized') {
         console.log('Canvas minimized, has content:', result.hasContent);
         alert(`Canvas minimized. Has content: ${result.hasContent}`);
       } else {
         console.log('Canvas cancelled');
+        alert('Canvas cancelled');
+      }
+    } catch (error) {
+      console.error('Canvas error:', error);
+      alert(`Canvas error: ${error}`);
+    }
+  };
+
+  const testCanvasExtraLarge = async () => {
+    try {
+      console.log('Opening canvas with extra large sheet...');
+      const result = await Canvas.openCanvas({
+        presentationStyle: 'sheet',
+        showGrabber: true,
+        allowMediumDetent: false,
+        sheetSize: 'extraLarge'
+      });
+      console.log('Canvas result:', result);
+      
+      if (result.action === 'submitted' && result.imageData) {
+        alert(`Canvas submitted! Image data length: ${result.imageData.length}`);
+      } else if (result.action === 'minimized') {
+        alert(`Canvas minimized. Has content: ${result.hasContent}`);
+      } else {
+        alert('Canvas cancelled');
+      }
+    } catch (error) {
+      console.error('Canvas error:', error);
+      alert(`Canvas error: ${error}`);
+    }
+  };
+
+  const testCanvasFullHeight = async () => {
+    try {
+      console.log('Opening canvas with full height sheet...');
+      const result = await Canvas.openCanvas({
+        presentationStyle: 'sheet',
+        showGrabber: true,
+        allowMediumDetent: false,
+        sheetSize: 'fullHeight'
+      });
+      console.log('Canvas result:', result);
+      
+      if (result.action === 'submitted' && result.imageData) {
+        alert(`Canvas submitted! Image data length: ${result.imageData.length}`);
+      } else if (result.action === 'minimized') {
+        alert(`Canvas minimized. Has content: ${result.hasContent}`);
+      } else {
+        alert('Canvas cancelled');
+      }
+    } catch (error) {
+      console.error('Canvas error:', error);
+      alert(`Canvas error: ${error}`);
+    }
+  };
+
+  const testCanvasFullScreen = async () => {
+    try {
+      console.log('Opening canvas with fullscreen presentation...');
+      const result = await Canvas.openCanvas({
+        presentationStyle: 'fullScreen'
+      });
+      console.log('Canvas result:', result);
+      
+      if (result.action === 'submitted' && result.imageData) {
+        alert(`Canvas submitted! Image data length: ${result.imageData.length}`);
+      } else if (result.action === 'minimized') {
+        alert(`Canvas minimized. Has content: ${result.hasContent}`);
+      } else {
         alert('Canvas cancelled');
       }
     } catch (error) {
@@ -108,20 +181,53 @@ const ChatBotDemo = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
       <div className="flex flex-col h-full">
-        {/* Temporary test button for canvas */}
-        <div className="mb-4 p-4 bg-yellow-100 border border-yellow-300 rounded-lg">
-          <h3 className="text-sm font-semibold text-yellow-800 mb-2">Canvas Test (Task 2.5)</h3>
-          <Button 
-            onClick={testCanvas}
-            className="flex items-center gap-2"
-            variant="outline"
-          >
-            <PenToolIcon className="size-4" />
-            Test Canvas.openCanvas()
-          </Button>
-          <p className="text-xs text-yellow-700 mt-2">
-            This button tests the native canvas functionality. Should open fullscreen canvas with toolbar.
-          </p>
+        {/* Canvas presentation style tests */}
+        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <h3 className="text-sm font-semibold text-blue-800 mb-3">Canvas Presentation Tests</h3>
+          <div className="flex flex-wrap gap-2">
+            <Button 
+              onClick={testCanvasSheet}
+              className="flex items-center gap-2"
+              variant="outline"
+              size="sm"
+            >
+              <PenToolIcon className="size-4" />
+              Sheet (Default)
+            </Button>
+            <Button 
+              onClick={testCanvasExtraLarge}
+              className="flex items-center gap-2"
+              variant="outline"
+              size="sm"
+            >
+              <PenToolIcon className="size-4" />
+              Extra Large Sheet
+            </Button>
+            <Button 
+              onClick={testCanvasFullHeight}
+              className="flex items-center gap-2"
+              variant="outline"
+              size="sm"
+            >
+              <PenToolIcon className="size-4" />
+              Full Height Sheet
+            </Button>
+            <Button 
+              onClick={testCanvasFullScreen}
+              className="flex items-center gap-2"
+              variant="outline"
+              size="sm"
+            >
+              <PenToolIcon className="size-4" />
+              Full Screen
+            </Button>
+          </div>
+          <div className="text-xs text-blue-700 mt-2 space-y-1">
+            <p><strong>Sheet (Default):</strong> Standard iOS sheet (~70% height)</p>
+            <p><strong>Extra Large Sheet:</strong> Bigger sheet (~95% height)</p>
+            <p><strong>Full Height Sheet:</strong> Nearly full screen sheet (~98% height)</p>
+            <p><strong>Full Screen:</strong> Traditional full-screen presentation</p>
+          </div>
         </div>
         
         <Conversation className="h-full">
