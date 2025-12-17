@@ -141,8 +141,19 @@ class CanvasViewController: UIViewController {
             return
         }
         
-        // Export to PNG
-        let image = canvasView.drawing.image(from: canvasView.bounds, scale: 1.0)
+        // Export to PNG with white background (PencilKit renders strokes on transparent by default)
+        let drawingImage = canvasView.drawing.image(from: canvasView.bounds, scale: 1.0)
+        
+        // Create image with white background
+        let renderer = UIGraphicsImageRenderer(size: canvasView.bounds.size)
+        let image = renderer.image { context in
+            // Fill with white background
+            UIColor.white.setFill()
+            context.fill(CGRect(origin: .zero, size: canvasView.bounds.size))
+            // Draw the strokes on top
+            drawingImage.draw(at: .zero)
+        }
+        
         guard let pngData = image.pngData() else {
             delegate?.canvasDidCancel()
             return

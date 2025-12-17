@@ -79,10 +79,10 @@ const ChatBotDemo = () => {
         filename: 'canvas-drawing.png',
       };
       
-      // Send the image as a message attachment
+      // Send the image as a message attachment (no text, just the image)
       sendMessage(
         { 
-          text: 'Sent handwritten message',
+          text: '',
           files: [canvasFile]
         },
         {
@@ -179,6 +179,8 @@ const ChatBotDemo = () => {
                 {message.parts.map((part, i) => {
                   switch (part.type) {
                     case 'text':
+                      // Skip rendering empty text parts (e.g., canvas-only messages)
+                      if (!part.text?.trim()) return null;
                       return (
                         <Message key={`${message.id}-${i}`} from={message.role}>
                           <MessageContent>
