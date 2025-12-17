@@ -92,7 +92,7 @@
     - Show indicator when unsaved content exists
     - Call `openCanvas()` on click
     - _Requirements: 6.1_
-  - [ ] 6.3 Implement canvas-first input UI with keyboard toggle
+  - [x] 6.3 Implement canvas-first input UI with keyboard toggle
     - Replace PromptInputTextarea with prominent "Open Canvas" button as the default input at bottom of chat
     - Display PromptInput.Footer below the canvas button (for images, websearch, model switching)
     - Add "Open Keyboard" button (small icon) in the footer area to toggle to text input mode

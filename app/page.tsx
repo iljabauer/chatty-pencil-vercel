@@ -35,7 +35,7 @@ import {
 } from '@/components/ai-elements/prompt-input';
 import { useState } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { CopyIcon, RefreshCcwIcon } from 'lucide-react';
+import { CopyIcon, RefreshCcwIcon, KeyboardIcon, PenToolIcon } from 'lucide-react';
 import {
   Source,
   Sources,
@@ -48,8 +48,10 @@ import {
   ReasoningTrigger,
 } from '@/components/ai-elements/reasoning';
 import { Loader } from '@/components/ai-elements/loader';
-import { ToggleCanvasButton } from '@/components/ToggleCanvasButton';
+
 import { useCanvasPlugin } from '@/lib/useCanvasPlugin';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 const models = [
   {
@@ -60,7 +62,8 @@ const models = [
 const ChatBotDemo = () => {
   const [input, setInput] = useState('');
   const [model, setModel] = useState<string>(models[0].value);
-  const [webSearch, setWebSearch] = useState(false);
+
+  const [inputMode, setInputMode] = useState<'canvas' | 'keyboard'>('canvas');
   const { messages, sendMessage, status, regenerate } = useChat();
   
   // Canvas plugin integration
@@ -92,6 +95,8 @@ const ChatBotDemo = () => {
       console.log('Canvas cancelled');
     }
   });
+
+
   
 
   const handleSubmit = (message: PromptInputMessage) => {
@@ -116,24 +121,7 @@ const ChatBotDemo = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
       <div className="flex flex-col h-full">
-        {/* Canvas Integration */}
-        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h3 className="text-sm font-semibold text-blue-800 mb-3">Canvas Integration</h3>
-          <div className="flex flex-wrap gap-2 items-center">
-            <ToggleCanvasButton
-              onClick={openCanvas}
-              hasUnsavedContent={hasUnsavedContent}
-              disabled={isCanvasOpen}
-            />
-            <div className="text-xs text-blue-700">
-              {hasUnsavedContent && <span className="font-semibold">• Unsaved content</span>}
-              {isCanvasOpen && <span className="font-semibold">• Canvas is open</span>}
-            </div>
-          </div>
-          <div className="text-xs text-blue-700 mt-2">
-            <p><strong>Canvas Button:</strong> Opens native drawing canvas. Shows indicator when unsaved content exists.</p>
-          </div>
-        </div>
+
         
         <Conversation className="h-full">
           <ConversationContent>
@@ -216,22 +204,77 @@ const ChatBotDemo = () => {
               {(attachment) => <PromptInputAttachment data={attachment} />}
             </PromptInputAttachments>
           </PromptInputHeader>
-          <PromptInputBody>
-            <PromptInputTextarea
-              onChange={(e) => setInput(e.target.value)}
-              value={input}
-            />
-          </PromptInputBody>
-          <PromptInputFooter>
-            <PromptInputTools>
-              <ToggleCanvasButton
+          {inputMode === 'canvas' ? (
+            /* Canvas Mode - Replace textarea with prominent canvas button */
+            <div className="w-full p-3">
+              <Button
                 onClick={openCanvas}
-                hasUnsavedContent={hasUnsavedContent}
                 disabled={isCanvasOpen}
-                variant="ghost"
+                size="lg"
+                className={cn(
+                  "w-full h-12 text-lg font-medium relative",
+                  hasUnsavedContent && "bg-blue-600 hover:bg-blue-700"
+                )}
+              >
+                <PenToolIcon className="mr-3 size-5" />
+                {hasUnsavedContent ? 'Continue Drawing' : 'Open Canvas'}
+                {hasUnsavedContent && (
+                  <div className="absolute -top-1 -right-1 size-3 bg-orange-500 rounded-full border-2 border-white animate-pulse" />
+                )}
+              </Button>
+            </div>
+          ) : (
+            /* Keyboard Mode - Standard textarea */
+            <PromptInputBody>
+              <PromptInputTextarea
+                onChange={(e) => setInput(e.target.value)}
+                value={input}
+                placeholder="Type your message..."
               />
+            </PromptInputBody>
+          )}
+          <PromptInputFooter>
+            <PromptInputTools className="flex-wrap gap-1">
+              <PromptInputActionMenu>
+                <PromptInputActionMenuTrigger />
+                <PromptInputActionMenuContent>
+                  <PromptInputActionAddAttachments />
+                </PromptInputActionMenuContent>
+              </PromptInputActionMenu>
+              
+              <PromptInputSelect value={model} onValueChange={setModel}>
+                <PromptInputSelectTrigger className="max-w-[180px]">
+                  <PromptInputSelectValue placeholder="Select model" />
+                </PromptInputSelectTrigger>
+                <PromptInputSelectContent>
+                  {models.map((m) => (
+                    <PromptInputSelectItem key={m.value} value={m.value}>
+                      {m.name}
+                    </PromptInputSelectItem>
+                  ))}
+                </PromptInputSelectContent>
+              </PromptInputSelect>
+              
+              {/* Input Mode Toggle Button */}
+              <PromptInputButton
+                onClick={() => setInputMode(inputMode === 'canvas' ? 'keyboard' : 'canvas')}
+                variant="ghost"
+              >
+                {inputMode === 'canvas' ? (
+                  <>
+                    <KeyboardIcon className="size-4" />
+                  </>
+                ) : (
+                  <>
+                    <PenToolIcon className="size-4" />
+                  </>
+                )}
+              </PromptInputButton>
             </PromptInputTools>
-            <PromptInputSubmit disabled={!input && !status} status={status} />
+            {/* Only show submit button in keyboard mode */}
+            {inputMode === 'keyboard' && (
+              <PromptInputSubmit disabled={!input && status !== 'streaming'} status={status} />
+            )}
           </PromptInputFooter>
         </PromptInput>
       </div>
