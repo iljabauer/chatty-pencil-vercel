@@ -35,7 +35,7 @@ import {
 } from '@/components/ai-elements/prompt-input';
 import { useState } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { CopyIcon, RefreshCcwIcon, KeyboardIcon, PenToolIcon } from 'lucide-react';
+import { CopyIcon, RefreshCcwIcon, KeyboardIcon, PenToolIcon, PlusIcon } from 'lucide-react';
 import {
   Source,
   Sources,
@@ -64,22 +64,26 @@ const ChatBotDemo = () => {
   const [model, setModel] = useState<string>(models[0].value);
 
   const [inputMode, setInputMode] = useState<'canvas' | 'keyboard'>('canvas');
-  const { messages, sendMessage, status, regenerate } = useChat();
+  const { messages, sendMessage, status, regenerate, setMessages } = useChat();
   
   // Canvas plugin integration
-  const { openCanvas, hasUnsavedContent, isCanvasOpen } = useCanvasPlugin({
+  const { openCanvas, clearCanvas, hasUnsavedContent, isCanvasOpen } = useCanvasPlugin({
     onSubmit: (imageData) => {
       console.log('Canvas submitted with image data length:', imageData.length);
+      
+      // Convert base64 PNG to proper file attachment format
+      const canvasFile = {
+        type: 'file' as const,
+        url: imageData, // Base64 data URL (data:image/png;base64,...)
+        mediaType: 'image/png',
+        filename: 'canvas-drawing.png',
+      };
+      
       // Send the image as a message attachment
       sendMessage(
         { 
           text: 'Sent handwritten message',
-          files: [{
-            type: 'file',
-            url: imageData, // Base64 data URL
-            mediaType: 'image/png',
-            filename: 'canvas-drawing.png',
-          }]
+          files: [canvasFile]
         },
         {
           body: {
@@ -87,6 +91,9 @@ const ChatBotDemo = () => {
           },
         },
       );
+      
+      // Canvas state is automatically cleared after successful submission
+      // as handled by the useCanvasPlugin hook
     },
     onMinimize: (hasContent) => {
       console.log('Canvas minimized, has content:', hasContent);
@@ -118,9 +125,31 @@ const ChatBotDemo = () => {
     );
     setInput('');
   };
+
+  const handleNewConversation = async () => {
+    // Clear messages
+    setMessages([]);
+    // Clear canvas state
+    await clearCanvas();
+    // Reset input
+    setInput('');
+  };
   return (
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
       <div className="flex flex-col h-full">
+        {/* Header with New Conversation Button */}
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">Chatty Pencil</h1>
+          <Button
+            onClick={handleNewConversation}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+          >
+            <PlusIcon className="size-4" />
+            New Conversation
+          </Button>
+        </div>
 
         
         <Conversation className="h-full">
@@ -177,6 +206,29 @@ const ChatBotDemo = () => {
                           )}
                         </Message>
                       );
+                    case 'file':
+                      // Handle canvas image attachments
+                      if (part.mediaType?.startsWith('image/')) {
+                        return (
+                          <Message key={`${message.id}-${i}`} from={message.role}>
+                            <MessageContent>
+                              <div className="max-w-md">
+                                <img 
+                                  src={part.url} 
+                                  alt={part.filename || 'Canvas drawing'} 
+                                  className="rounded-lg border shadow-sm max-w-full h-auto"
+                                />
+                                {part.filename && (
+                                  <p className="text-sm text-gray-500 mt-2">
+                                    {part.filename}
+                                  </p>
+                                )}
+                              </div>
+                            </MessageContent>
+                          </Message>
+                        );
+                      }
+                      return null;
                     case 'reasoning':
                       return (
                         <Reasoning

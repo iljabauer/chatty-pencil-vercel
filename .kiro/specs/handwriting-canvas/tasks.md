@@ -99,7 +99,7 @@
     - When in keyboard mode, show full PromptInput with PromptInputTextarea and a button to return to canvas mode
     - Preserve unsaved canvas content when switching between input modes
     - _Requirements: 6.1, 6.8, 6.9, 6.10, 6.11_
-  - [ ] 6.4 Implement canvas submission handling
+  - [x] 6.4 Implement canvas submission handling
     - Handle canvas submission result from openCanvas() hook
     - Convert base64 PNG to proper image attachment format
     - Send image as message attachment to chat
