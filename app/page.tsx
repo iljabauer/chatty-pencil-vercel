@@ -35,7 +35,7 @@ import {
 } from '@/components/ai-elements/prompt-input';
 import { Fragment, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
-import { CopyIcon, GlobeIcon, RefreshCcwIcon } from 'lucide-react';
+import { CopyIcon, GlobeIcon, RefreshCcwIcon, PenToolIcon } from 'lucide-react';
 import {
   Source,
   Sources,
@@ -48,6 +48,8 @@ import {
   ReasoningTrigger,
 } from '@/components/ai-elements/reasoning';
 import { Loader } from '@/components/ai-elements/loader';
+import { Canvas } from '@/lib/canvas-plugin';
+import { Button } from '@/components/ui/button';
 
 const models = [
   {
@@ -60,6 +62,30 @@ const ChatBotDemo = () => {
   const [model, setModel] = useState<string>(models[0].value);
   const [webSearch, setWebSearch] = useState(false);
   const { messages, sendMessage, status, regenerate } = useChat();
+  
+  // Temporary test function for canvas
+  const testCanvas = async () => {
+    try {
+      console.log('Opening canvas...');
+      const result = await Canvas.openCanvas();
+      console.log('Canvas result:', result);
+      
+      if (result.action === 'submitted' && result.imageData) {
+        console.log('Canvas submitted with image data length:', result.imageData.length);
+        // For testing, we'll just log the result
+        alert(`Canvas submitted! Image data length: ${result.imageData.length}`);
+      } else if (result.action === 'minimized') {
+        console.log('Canvas minimized, has content:', result.hasContent);
+        alert(`Canvas minimized. Has content: ${result.hasContent}`);
+      } else {
+        console.log('Canvas cancelled');
+        alert('Canvas cancelled');
+      }
+    } catch (error) {
+      console.error('Canvas error:', error);
+      alert(`Canvas error: ${error}`);
+    }
+  };
   const handleSubmit = (message: PromptInputMessage) => {
     const hasText = Boolean(message.text);
     const hasAttachments = Boolean(message.files?.length);
@@ -82,6 +108,22 @@ const ChatBotDemo = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
       <div className="flex flex-col h-full">
+        {/* Temporary test button for canvas */}
+        <div className="mb-4 p-4 bg-yellow-100 border border-yellow-300 rounded-lg">
+          <h3 className="text-sm font-semibold text-yellow-800 mb-2">Canvas Test (Task 2.5)</h3>
+          <Button 
+            onClick={testCanvas}
+            className="flex items-center gap-2"
+            variant="outline"
+          >
+            <PenToolIcon className="size-4" />
+            Test Canvas.openCanvas()
+          </Button>
+          <p className="text-xs text-yellow-700 mt-2">
+            This button tests the native canvas functionality. Should open fullscreen canvas with toolbar.
+          </p>
+        </div>
+        
         <Conversation className="h-full">
           <ConversationContent>
             {messages.map((message) => (

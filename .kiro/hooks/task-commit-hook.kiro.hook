@@ -4,10 +4,7 @@
   "description": "Automatically creates a git commit when task.md is saved, generating a commit message based on the context of completed tasks",
   "version": "1",
   "when": {
-    "type": "fileEdited",
-    "patterns": [
-      ".kiro/specs/**/tasks.md"
-    ]
+    "type": "userTriggered"
   },
   "then": {
     "type": "askAgent",

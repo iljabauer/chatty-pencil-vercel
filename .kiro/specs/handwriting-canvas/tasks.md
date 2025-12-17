@@ -43,7 +43,7 @@
   - [ ] 2.4 Write property test for PNG export validity
     - **Property 1: Export produces valid base64 PNG when canvas has content**
     - **Validates: Requirements 2.1**
-  - [ ] 2.5 Manual test: Verify canvas view displays and drawing works
+  - [x] 2.5 Manual test: Verify canvas view displays and drawing works
     - Add temporary button that calls `Canvas.openCanvas()`
     - Build and run on iPad simulator
     - Verify fullscreen canvas appears with toolbar (Ask Human)
