@@ -83,11 +83,9 @@ extension CanvasPlugin: PencilInteractionManagerDelegate {
 }
 ```
 
-### CanvasViewController (Modified)
+### CanvasViewController (No Changes Required)
 
-The canvas view controller is extended to:
-1. Register its own `UIPencilInteraction` when presented
-2. Handle double-tap to minimize while drawing
+The canvas view controller uses PKToolPicker which automatically handles Apple Pencil interactions according to the user's system preferences. No additional pencil interaction setup is needed.
 
 ## Data Models
 
@@ -105,16 +103,16 @@ interface CanvasResult {
 
 *A property is a characteristic or behavior that should hold true across all valid executions of a system-essentially, a formal statement about what the system should do. Properties serve as the bridge between human-readable specifications and machine-verifiable correctness guarantees.*
 
-### Property 1: Double-tap toggles canvas state
-*For any* canvas state (open or closed), when a double-tap gesture is detected, the canvas state SHALL transition to the opposite state (closed becomes open, open becomes closed/minimized).
-**Validates: Requirements 1.1, 2.1**
+### Property 1: Double-tap opens canvas when closed
+*For any* closed canvas state, when a double-tap gesture is detected, the canvas SHALL open.
+**Validates: Requirements 1.1**
 
 ### Property 2: State preservation round-trip
 *For any* drawing on the canvas, minimizing via double-tap and then reopening via double-tap SHALL restore the exact same drawing strokes.
 **Validates: Requirements 1.2, 2.2**
 
 ### Property 3: Minimize notification includes content state
-*For any* minimize action triggered by double-tap, the delegate callback SHALL be invoked with the correct `hasContent` boolean reflecting whether strokes exist on the canvas.
+*For any* minimize action (via button or swipe), the delegate callback SHALL be invoked with the correct `hasContent` boolean reflecting whether strokes exist on the canvas.
 **Validates: Requirements 2.3**
 
 ## User Preference Handling
@@ -126,10 +124,10 @@ The system provides `UIPencilInteraction.preferredTapAction` which reflects the 
 - `.showInkAttributes` - Show ink settings
 - `.ignore` - Do nothing
 
-**Design Decision**: Since our app uses double-tap for canvas toggle (a unique app-specific action), we will:
-1. Always handle the double-tap for canvas toggle regardless of system preference
-2. This is acceptable because our action (toggle canvas) is fundamentally different from tool switching within a drawing context
-3. When the canvas is open and user is actively drawing, we could optionally respect the system preference for tool switching in a future enhancement
+**Design Decision**: Due to iPadOS system behavior with PKToolPicker:
+1. When canvas is closed: Handle double-tap to open canvas (app-specific action)
+2. When canvas is open with PKToolPicker active: Defer to user's system-wide pencil preference (e.g., switch to eraser, show color palette)
+3. This provides the best user experience by respecting system conventions while adding our custom shortcut
 
 ## Error Handling
 

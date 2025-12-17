@@ -25,13 +25,13 @@ This feature adds Apple Pencil double-tap gesture support to the Chatty Pencil a
 
 ### Requirement 2
 
-**User Story:** As a user with Apple Pencil (2nd generation or Pro), I want to double-tap my pencil to minimize the canvas, so that I can quickly return to the chat view while preserving my drawing.
+**User Story:** As a user with Apple Pencil (2nd generation or Pro), I want the system to respect my pencil preferences while drawing, so that double-tap behaves according to my system settings when the canvas is active.
 
 #### Acceptance Criteria
 
-1. WHEN the canvas overlay is open and a user double-taps the Apple Pencil THEN the System SHALL minimize the canvas and return to the chat view
-2. WHEN the canvas is minimized via double-tap THEN the System SHALL preserve all current strokes on the canvas
-3. WHEN the canvas is minimized via double-tap THEN the System SHALL notify the web layer of the minimize action with content state
+1. WHEN the canvas overlay is open and PKToolPicker is active THEN the System SHALL defer to the user's system-wide Apple Pencil double-tap preference
+2. WHEN the canvas is minimized via the minimize button THEN the System SHALL preserve all current strokes on the canvas
+3. WHEN the canvas is minimized via any method THEN the System SHALL notify the web layer of the minimize action with content state
 
 ### Requirement 3
 
