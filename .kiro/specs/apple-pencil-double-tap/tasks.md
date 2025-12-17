@@ -1,7 +1,7 @@
 # Implementation Plan
 
-- [ ] 1. Create PencilInteractionManager and integrate with CanvasPlugin
-  - [ ] 1.1 Create PencilInteractionManager.swift file
+- [x] 1. Create PencilInteractionManager and integrate with CanvasPlugin
+  - [x] 1.1 Create PencilInteractionManager.swift file
     - Create new Swift file in `capacitor-canvas-plugin/ios/Sources/CanvasPlugin/`
     - Implement singleton pattern with `static let shared`
     - Define `PencilInteractionManagerDelegate` protocol with `pencilInteractionDidRequestToggle()` method
@@ -10,20 +10,20 @@
     - Implement `pencilInteractionDidTap(_ interaction:)` to call delegate
     - _Requirements: 1.3, 3.1, 3.2_
 
-  - [ ] 1.2 Add canvas state tracking to CanvasPlugin
+  - [x] 1.2 Add canvas state tracking to CanvasPlugin
     - Add `private var isCanvasOpen: Bool` property to track state
     - Update `openCanvas()` to set `isCanvasOpen = true`
     - Update delegate callbacks to set `isCanvasOpen = false` on minimize/submit/cancel
     - _Requirements: 1.1, 2.1_
 
-  - [ ] 1.3 Implement PencilInteractionManagerDelegate in CanvasPlugin
+  - [x] 1.3 Implement PencilInteractionManagerDelegate in CanvasPlugin
     - Conform `CanvasPlugin` to `PencilInteractionManagerDelegate`
     - Implement `pencilInteractionDidRequestToggle()` method
     - When canvas is closed: call internal method to open canvas
     - When canvas is open: call internal method to minimize canvas
     - _Requirements: 1.1, 2.1_
 
-  - [ ] 1.4 Setup pencil interaction on plugin load
+  - [x] 1.4 Setup pencil interaction on plugin load
     - Override `load()` method in CanvasPlugin
     - Get reference to bridge's webView
     - Call `PencilInteractionManager.shared.setupInteraction(on: webView)`
@@ -34,7 +34,7 @@
     - **Property 1: Double-tap toggles canvas state**
     - **Validates: Requirements 1.1, 2.1**
 
-  - [ ] 1.6 Human confirms: Double-tap opens canvas from chat view
+  - [x] 1.6 Human confirms: Double-tap opens canvas from chat view
     - Build and run app on iPad with Apple Pencil 2nd gen or Pro
     - From chat view, double-tap Apple Pencil
     - Verify canvas overlay opens

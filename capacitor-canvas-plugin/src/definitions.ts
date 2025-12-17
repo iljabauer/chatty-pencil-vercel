@@ -50,4 +50,14 @@ export interface CanvasPlugin {
    * Checks if there's unsaved content on the canvas.
    */
   hasContent(): Promise<HasContentResult>;
+  
+  /**
+   * Add listener for canvas events (pencil-initiated actions)
+   */
+  addListener(eventName: 'canvasMinimized' | 'canvasSubmitted' | 'canvasCancelled', listenerFunc: (event: CanvasResult) => void): Promise<any>;
+  
+  /**
+   * Remove all listeners for canvas events
+   */
+  removeAllListeners(): Promise<void>;
 }

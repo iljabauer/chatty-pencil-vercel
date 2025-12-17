@@ -129,10 +129,41 @@ export function useCanvasPlugin(options: UseCanvasPluginOptions = {}): UseCanvas
     }
   }, []);
 
-  // Check for unsaved content on mount
+  // Check for unsaved content on mount and set up event listeners
   useEffect(() => {
     refreshContentState();
-  }, [refreshContentState]);
+    
+    // Set up event listeners for pencil-initiated canvas actions
+    const handleCanvasMinimized = (event: CanvasResult) => {
+      onMinimize?.(event.hasContent);
+      setHasUnsavedContent(event.hasContent);
+      setIsCanvasOpen(false);
+    };
+    
+    const handleCanvasSubmitted = (event: CanvasResult) => {
+      if (event.imageData) {
+        onSubmit?.(event.imageData);
+      }
+      setHasUnsavedContent(false);
+      setIsCanvasOpen(false);
+    };
+    
+    const handleCanvasCancelled = (event: CanvasResult) => {
+      onCancel?.();
+      setHasUnsavedContent(event.hasContent);
+      setIsCanvasOpen(false);
+    };
+    
+    // Add event listeners
+    Canvas.addListener('canvasMinimized', handleCanvasMinimized);
+    Canvas.addListener('canvasSubmitted', handleCanvasSubmitted);
+    Canvas.addListener('canvasCancelled', handleCanvasCancelled);
+    
+    // Cleanup function
+    return () => {
+      Canvas.removeAllListeners();
+    };
+  }, [refreshContentState, onSubmit, onMinimize, onCancel]);
 
   return {
     openCanvas,

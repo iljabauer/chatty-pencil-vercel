@@ -170,6 +170,16 @@ class CanvasViewController: UIViewController {
     }
     
     @objc private func minimizeTapped() {
+        minimizeCanvas()
+    }
+    
+    // MARK: - Internal Methods
+    
+    func minimizeFromPencilTap() {
+        minimizeCanvas()
+    }
+    
+    private func minimizeCanvas() {
         // Preserve current drawing
         canvas.setPreservedDrawing(canvasView.drawing)
         
