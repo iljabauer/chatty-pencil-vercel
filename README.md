@@ -27,6 +27,10 @@ npm install
 # Install iOS dependencies
 npx cap sync ios
 
+# Configure environment variables
+cp .env.example .env.local
+# Edit .env.local with your actual values
+
 # Start development server
 npm run dev
 ```
@@ -89,6 +93,31 @@ interface CanvasResult {
   hasContent: boolean; // Whether canvas has strokes
 }
 ```
+
+## ⚙️ Environment Configuration
+
+The application requires several environment variables for proper operation. Copy `.env.example` to `.env.local` and configure the following:
+
+### Required Variables
+
+| Variable | Location | Purpose |
+|----------|----------|---------|
+| `PROVIDER_API_KEY` | Server | Authentication with AI provider (OpenAI, Anthropic, etc.) |
+| `API_SECRET_KEY` | Server | Protects the `/api/chat` endpoint from unauthorized access |
+| `NEXT_PUBLIC_API_KEY` | Client (build-time) | API key sent by iOS app to authenticate with backend |
+| `NEXT_PUBLIC_API_URL` | Client (build-time) | Production API base URL (e.g., `https://api.example.com`) |
+
+### Security Notes
+
+- `API_SECRET_KEY` and `NEXT_PUBLIC_API_KEY` must match for authentication to work
+- Use a strong, randomly generated string for `API_SECRET_KEY`
+- `NEXT_PUBLIC_*` variables are embedded in the client build and visible to users
+- For production deployment, ensure all variables are properly configured
+
+### Development vs Production
+
+- **Development**: `NEXT_PUBLIC_API_URL` can be empty (uses same-origin requests)
+- **Production**: `NEXT_PUBLIC_API_URL` should point to your deployed backend URL
 
 ## 🔧 Development
 

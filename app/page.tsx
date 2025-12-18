@@ -26,6 +26,7 @@ import {
 } from '@/components/ai-elements/prompt-input';
 import { useState } from 'react';
 import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import { CopyIcon, RefreshCcwIcon, KeyboardIcon, PenToolIcon, PlusIcon } from 'lucide-react';
 import {
   Source,
@@ -43,6 +44,7 @@ import { Loader } from '@/components/ai-elements/loader';
 import { useCanvasPlugin } from '@/lib/useCanvasPlugin';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { API_KEY } from '@/lib/api-config';
 
 const models = [
   {
@@ -55,7 +57,14 @@ const ChatBotDemo = () => {
   const [model] = useState<string>(models[0].value);
 
   const [inputMode, setInputMode] = useState<'canvas' | 'keyboard'>('canvas');
-  const { messages, sendMessage, status, regenerate, setMessages } = useChat();
+  const { messages, sendMessage, status, regenerate, setMessages } = useChat({
+    transport: new DefaultChatTransport({
+      api: '/api/chat',
+      headers: {
+        'x-api-key': API_KEY,
+      },
+    }),
+  });
   
   // Canvas plugin integration
   const { openCanvas, clearCanvas, hasUnsavedContent, isCanvasOpen } = useCanvasPlugin({
