@@ -44,7 +44,7 @@ import { Loader } from '@/components/ai-elements/loader';
 import { useCanvasPlugin } from '@/lib/useCanvasPlugin';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { API_KEY } from '@/lib/api-config';
+import { API_KEY, API_BASE_URL } from '@/lib/api-config';
 
 const models = [
   {
@@ -59,7 +59,7 @@ const ChatBotDemo = () => {
   const [inputMode, setInputMode] = useState<'canvas' | 'keyboard'>('canvas');
   const { messages, sendMessage, status, regenerate, setMessages } = useChat({
     transport: new DefaultChatTransport({
-      api: '/api/chat',
+      api: `${API_BASE_URL}/api/chat`,
       headers: {
         'x-api-key': API_KEY,
       },

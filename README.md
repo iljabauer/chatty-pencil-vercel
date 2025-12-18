@@ -106,6 +106,7 @@ The application requires several environment variables for proper operation. Cop
 | `API_SECRET_KEY` | Server | Protects the `/api/chat` endpoint from unauthorized access |
 | `NEXT_PUBLIC_API_KEY` | Client (build-time) | API key sent by iOS app to authenticate with backend |
 | `NEXT_PUBLIC_API_URL` | Client (build-time) | Production API base URL (e.g., `https://api.example.com`) |
+| `API_ONLY_MODE` | Server (optional) | Controls deployment mode: `true` for API-only, `false`/unset for full-stack |
 
 ### Security Notes
 
@@ -118,6 +119,29 @@ The application requires several environment variables for proper operation. Cop
 
 - **Development**: `NEXT_PUBLIC_API_URL` can be empty (uses same-origin requests)
 - **Production**: `NEXT_PUBLIC_API_URL` should point to your deployed backend URL
+
+### Deployment Modes
+
+The application supports two deployment configurations controlled by the `API_ONLY_MODE` environment variable:
+
+#### Full-Stack Mode (Default)
+- `API_ONLY_MODE=false` or unset
+- Exports static files for bundling in iOS app
+- Serves both frontend pages and API routes
+- Suitable for single-deployment scenarios
+
+#### API-Only Mode
+- `API_ONLY_MODE=true`
+- Serves only API routes (`/api/*`)
+- Blocks all static content and pages (returns 404)
+- Optimized for separate backend server deployments
+- Useful when frontend is bundled separately (e.g., in iOS app)
+
+**Use Cases for API-Only Mode:**
+- Deploying backend API to a separate server (e.g., Railway, Heroku)
+- iOS app bundles the frontend statically
+- Microservice architecture with dedicated API servers
+- Cost optimization by serving static content from CDN/app bundle
 
 ## 🔧 Development
 
