@@ -1,6 +1,6 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
-const isDev = true; //process.env.NODE_ENV === 'development';
+const isDev = process.env.NODE_ENV === 'development';
 
 const config: CapacitorConfig = {
   appId: 'ai.humanintent.ios.chattypencil',
