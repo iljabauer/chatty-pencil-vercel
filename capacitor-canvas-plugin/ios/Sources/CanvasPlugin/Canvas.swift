@@ -2,6 +2,40 @@ import Foundation
 import UIKit
 import PencilKit
 
+// MARK: - BoundingBox
+struct BoundingBox {
+    var minX: CGFloat = .infinity
+    var minY: CGFloat = .infinity
+    var maxX: CGFloat = -.infinity
+    var maxY: CGFloat = -.infinity
+    
+    mutating func expand(to point: CGPoint) {
+        minX = min(minX, point.x)
+        minY = min(minY, point.y)
+        maxX = max(maxX, point.x)
+        maxY = max(maxY, point.y)
+    }
+    
+    var rect: CGRect {
+        guard minX != .infinity else {
+            return .zero
+        }
+        return CGRect(
+            x: minX,
+            y: minY,
+            width: maxX - minX,
+            height: maxY - minY
+        )
+    }
+}
+
+// MARK: - ScalingResult
+struct ScalingResult {
+    let original: CGRect      // Original bounding box
+    let scale: CGFloat        // Scale factor applied
+    let size: CGSize          // Final rendered size
+}
+
 @objc public class Canvas: NSObject {
     // Static property to preserve drawing state across minimize/reopen
     private static var preservedDrawing: PKDrawing?
@@ -148,19 +182,37 @@ class CanvasViewController: UIViewController {
             return
         }
         
-        // Export to PNG with white background (PencilKit renders strokes on transparent by default)
-        let drawingImage = canvasView.drawing.image(from: canvasView.bounds, scale: 1.0)
+        // Call calculateBoundingBox for current drawing
+        let boundingBox = calculateBoundingBox(for: canvasView.drawing)
         
-        // Create image with white background
-        let renderer = UIGraphicsImageRenderer(size: canvasView.bounds.size)
+        // Apply padding and clipping
+        let paddedBox = addPaddingToBoundingBox(boundingBox)
+        let clippedBox = clipPaddedBoxToCanvasBounds(paddedBox, canvasBounds: canvasView.bounds)
+        
+        // Call scaleIfNeeded to get final dimensions
+        let scalingResult = scaleIfNeeded(rect: clippedBox)
+        
+        // Export image using cropped region and scale factor
+        let drawingImage = canvasView.drawing.image(from: scalingResult.original, scale: scalingResult.scale)
+        
+        // Maintain existing white background rendering
+        let renderer = UIGraphicsImageRenderer(size: scalingResult.size)
         let image = renderer.image { context in
             // Fill with white background
             UIColor.white.setFill()
-            context.fill(CGRect(origin: .zero, size: canvasView.bounds.size))
+            context.fill(CGRect(origin: .zero, size: scalingResult.size))
             // Draw the strokes on top
             drawingImage.draw(at: .zero)
         }
         
+        // Call logExportDimensions with all dimension info
+        logExportDimensions(
+            original: canvasView.bounds.size,
+            cropped: clippedBox.size,
+            final: scalingResult.size
+        )
+        
+        // Maintain existing base64 encoding
         guard let pngData = image.pngData() else {
             delegate?.canvasDidCancel()
             return
@@ -195,6 +247,111 @@ class CanvasViewController: UIViewController {
         dismiss(animated: true) {
             self.delegate?.canvasDidMinimize(hasContent: hasContent)
         }
+    }
+    
+    // MARK: - Bounding Box Calculation
+    
+    func calculateBoundingBox(for drawing: PKDrawing) -> CGRect {
+        var bbox = BoundingBox()
+        
+        // Iterate through all strokes in PKDrawing
+        for stroke in drawing.strokes {
+            // Iterate through all points in each stroke path
+            for point in stroke.path {
+                // Expand bounding box to include each point
+                bbox.expand(to: point.location)
+            }
+        }
+        
+        // Return empty rect for drawings with no strokes
+        return bbox.rect
+    }
+    
+    // MARK: - Padding Logic
+    
+    func addPaddingToBoundingBox(_ boundingBox: CGRect, padding: CGFloat = 32.0) -> CGRect {
+        // Inset bounding box by -32 pixels on all sides (expand by 32 pixels)
+        let paddedBox = boundingBox.insetBy(dx: -padding, dy: -padding)
+        
+        // Handle edge case where padding creates negative dimensions
+        // If the original bounding box is smaller than 2*padding, ensure minimum size
+        let minWidth = max(paddedBox.width, 2 * padding)
+        let minHeight = max(paddedBox.height, 2 * padding)
+        
+        return CGRect(
+            x: paddedBox.origin.x,
+            y: paddedBox.origin.y,
+            width: minWidth,
+            height: minHeight
+        )
+    }
+    
+    // MARK: - Clipping Logic
+    
+    func clipPaddedBoxToCanvasBounds(_ paddedBox: CGRect, canvasBounds: CGRect) -> CGRect {
+        // Intersect padded box with canvas bounds
+        let clippedBox = paddedBox.intersection(canvasBounds)
+        
+        // Ensure result stays within valid canvas area
+        // If intersection results in empty rect, return the canvas bounds
+        if clippedBox.isEmpty {
+            return canvasBounds
+        }
+        
+        return clippedBox
+    }
+    
+    // MARK: - Scaling Logic
+    
+    func scaleIfNeeded(rect: CGRect, maxDimension: CGFloat = 3200.0) -> ScalingResult {
+        let width = rect.width
+        let height = rect.height
+        
+        // Check if width or height exceeds 3200 pixels
+        guard width > maxDimension || height > maxDimension else {
+            // Return scale of 1.0 if no scaling needed
+            return ScalingResult(
+                original: rect,
+                scale: 1.0,
+                size: rect.size
+            )
+        }
+        
+        // Calculate scale factor as min(3200/width, 3200/height)
+        let scale = min(maxDimension / width, maxDimension / height)
+        let finalSize = CGSize(
+            width: width * scale,
+            height: height * scale
+        )
+        
+        // Return ScalingResult with scale factor and final dimensions
+        return ScalingResult(
+            original: rect,
+            scale: scale,
+            size: finalSize
+        )
+    }
+    
+    // MARK: - Logging
+    
+    func logExportDimensions(original: CGSize, cropped: CGSize, final: CGSize) {
+        // Log original canvas dimensions
+        // Log cropped dimensions after bounding box
+        // Log final dimensions after scaling
+        // Calculate and log percentage reduction
+        // Format output in structured, readable format
+        
+        let originalArea = original.width * original.height
+        let finalArea = final.width * final.height
+        let reduction = originalArea > 0 ? (1.0 - finalArea / originalArea) * 100 : 0
+        
+        print("""
+        [Canvas Export]
+        Original: \(Int(original.width))x\(Int(original.height))
+        Cropped:  \(Int(cropped.width))x\(Int(cropped.height))
+        Final:    \(Int(final.width))x\(Int(final.height))
+        Reduction: \(Int(reduction))%
+        """)
     }
 }
 

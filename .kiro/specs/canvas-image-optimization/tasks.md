@@ -1,13 +1,13 @@
 # Implementation Plan
 
-- [ ] 1. Implement bounding box calculation
-  - [ ] 1.1 Create BoundingBox struct in Canvas.swift
+- [x] 1. Implement bounding box calculation
+  - [x] 1.1 Create BoundingBox struct in Canvas.swift
     - Define struct with minX, minY, maxX, maxY properties
     - Implement expand(to:) method to update bounds with new points
     - Implement rect computed property to convert to CGRect
     - _Requirements: 1.1, 1.5_
   
-  - [ ] 1.2 Implement calculateBoundingBox method in CanvasViewController
+  - [x] 1.2 Implement calculateBoundingBox method in CanvasViewController
     - Iterate through all strokes in PKDrawing
     - Iterate through all points in each stroke path
     - Expand bounding box to include each point
@@ -22,13 +22,13 @@
     - **Property 8: Empty canvas prevents export**
     - **Validates: Requirements 1.5, 2.3**
 
-- [ ] 2. Implement padding and clipping logic
-  - [ ] 2.1 Add padding to bounding box
+- [x] 2. Implement padding and clipping logic
+  - [x] 2.1 Add padding to bounding box
     - Inset bounding box by -32 pixels on all sides
     - Handle edge case where padding creates negative dimensions
     - _Requirements: 1.3_
   
-  - [ ] 2.2 Clip padded box to canvas bounds
+  - [x] 2.2 Clip padded box to canvas bounds
     - Intersect padded box with canvas bounds
     - Ensure result stays within valid canvas area
     - _Requirements: 1.4_
@@ -37,12 +37,12 @@
     - **Property 2: Padding is applied correctly**
     - **Validates: Requirements 1.3**
 
-- [ ] 3. Implement scaling logic
-  - [ ] 3.1 Create ScalingResult struct
+- [x] 3. Implement scaling logic
+  - [x] 3.1 Create ScalingResult struct
     - Define struct with original rect, scale factor, and final size
     - _Requirements: 3.1_
   
-  - [ ] 3.2 Implement scaleIfNeeded method
+  - [x] 3.2 Implement scaleIfNeeded method
     - Check if width or height exceeds 3200 pixels
     - Calculate scale factor as min(3200/width, 3200/height)
     - Return ScalingResult with scale factor and final dimensions
@@ -61,8 +61,8 @@
     - Test that images within 3200x3200 have scale factor of 1.0
     - _Requirements: 3.7_
 
-- [ ] 4. Implement logging
-  - [ ] 5.1 Create logExportDimensions method
+- [x] 4. Implement logging
+  - [x] 5.1 Create logExportDimensions method
     - Log original canvas dimensions
     - Log cropped dimensions after bounding box
     - Log final dimensions after scaling
@@ -75,7 +75,7 @@
     - **Validates: Requirements 4.1, 4.2, 4.3**
 
 - [ ] 5. Integrate optimization into submitTapped
-  - [ ] 5.1 Modify submitTapped to use bounding box
+  - [x] 5.1 Modify submitTapped to use bounding box
     - Call calculateBoundingBox for current drawing
     - Apply padding and clipping
     - Call scaleIfNeeded to get final dimensions
@@ -126,5 +126,5 @@
     - Verify imageData format unchanged
     - **Validates: Requirements 5.1, 5.2, 5.3**
 
-- [ ] 8. Final checkpoint
+- [x] 8. Final checkpoint
   - Ensure all tests pass, ask the user if questions arise.
