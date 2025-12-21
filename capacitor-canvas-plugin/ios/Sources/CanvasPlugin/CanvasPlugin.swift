@@ -222,7 +222,7 @@ extension CanvasPlugin: PencilInteractionManagerDelegate {
 
 // MARK: - CanvasViewControllerDelegate
 extension CanvasPlugin: CanvasViewControllerDelegate {
-    func canvasDidSubmit(imageData: String) {
+    func canvasDidSubmit(imageData: String, imageBinarySize: Int) {
         isCanvasOpen = false
         
         if isPencilInitiated {
@@ -230,6 +230,7 @@ extension CanvasPlugin: CanvasViewControllerDelegate {
             notifyListeners("canvasSubmitted", data: [
                 "action": "submitted",
                 "imageData": imageData,
+                "imageBinarySize": imageBinarySize,
                 "hasContent": false
             ])
             isPencilInitiated = false
@@ -238,6 +239,7 @@ extension CanvasPlugin: CanvasViewControllerDelegate {
             currentCall?.resolve([
                 "action": "submitted",
                 "imageData": imageData,
+                "imageBinarySize": imageBinarySize,
                 "hasContent": false
             ])
             currentCall = nil

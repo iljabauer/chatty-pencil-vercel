@@ -20,6 +20,13 @@ export interface CanvasResult {
   action: 'submitted' | 'minimized' | 'cancelled';
   /** Base64 PNG image data (only present if action is 'submitted') */
   imageData?: string;
+  /** 
+   * Size of the raw binary PNG in bytes (only present if action is 'submitted').
+   * This represents the actual binary size before base64 encoding, used for
+   * transfer metrics and bandwidth optimization calculations.
+   * @since 1.1.0
+   */
+  imageBinarySize?: number;
   /** Whether canvas has content (for minimize case) */
   hasContent: boolean;
 }
