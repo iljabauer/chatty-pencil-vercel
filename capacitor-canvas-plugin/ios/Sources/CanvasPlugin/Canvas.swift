@@ -65,7 +65,7 @@ import UIKit
 import PencilKit
 
 protocol CanvasViewControllerDelegate: AnyObject {
-    func canvasDidSubmit(imageData: String, imageBinarySize: Int)
+    func canvasDidSubmit(imageData: String)
     func canvasDidMinimize(hasContent: Bool)
     func canvasDidCancel()
 }
@@ -219,16 +219,12 @@ class CanvasViewController: UIViewController {
         }
         
         let base64String = "data:image/png;base64," + pngData.base64EncodedString()
-        let binarySize = pngData.count
-        
-        // Log transfer metrics
-        logTransferMetrics(binarySize: binarySize)
         
         // Clear preserved state after successful submit
         canvas.setPreservedDrawing(nil)
         
         dismiss(animated: true) {
-            self.delegate?.canvasDidSubmit(imageData: base64String, imageBinarySize: binarySize)
+            self.delegate?.canvasDidSubmit(imageData: base64String)
         }
     }
     
@@ -355,20 +351,6 @@ class CanvasViewController: UIViewController {
         Cropped:  \(Int(cropped.width))x\(Int(cropped.height))
         Final:    \(Int(final.width))x\(Int(final.height))
         Reduction: \(Int(reduction))%
-        """)
-    }
-    
-    func logTransferMetrics(binarySize: Int) {
-        // Calculate theoretical base64 size (4/3 ratio with padding)
-        let base64Size = Int(ceil(Double(binarySize) * 4.0 / 3.0))
-        let savings = base64Size - binarySize
-        let savingsPercent = base64Size > 0 ? Double(savings) / Double(base64Size) * 100 : 0
-        
-        print("""
-        [Binary Transfer]
-        Binary size: \(binarySize) bytes
-        Base64 would be: \(base64Size) bytes
-        Savings: \(savings) bytes (\(Int(savingsPercent))%)
         """)
     }
 }

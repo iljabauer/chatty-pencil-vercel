@@ -1,13 +1,13 @@
 # Implementation Plan
 
-- [x] 1. Add binary utility functions to web layer
-  - [x] 1.1 Create binary-utils.ts with base64ToBlob function
+- [ ] 1. Add binary utility functions to web layer
+  - [ ] 1.1 Create binary-utils.ts with base64ToBlob function
     - Implement function to convert base64 data URL to Blob
     - Handle data URL prefix removal
     - Use atob() and Uint8Array for conversion
     - _Requirements: 2.1, 2.2_
   
-  - [x] 1.2 Add createMultipartFormData function
+  - [ ] 1.2 Add createMultipartFormData function
     - Create FormData with image Blob as file attachment
     - Add message data as JSON string in separate field
     - Return properly structured FormData
@@ -21,26 +21,26 @@
     - **Property 2: Binary size reduction**
     - **Validates: Requirements 5.2**
 
-- [x] 2. Update API endpoint to accept multipart requests
-  - [x] 2.1 Add multipart parsing logic to route.ts
+- [ ] 2. Update API endpoint to accept multipart requests
+  - [ ] 2.1 Add multipart parsing logic to route.ts
     - Check Content-Type header for multipart/form-data
     - Parse FormData using req.formData()
     - Extract image file and data JSON
     - _Requirements: 4.1, 4.2_
   
-  - [x] 2.2 Implement backward compatibility for JSON requests
+  - [ ] 2.2 Implement backward compatibility for JSON requests
     - Detect request type from Content-Type header
     - Handle JSON body parsing for legacy requests
     - Process both formats to same internal structure
     - _Requirements: 2.3_
   
-  - [x] 2.3 Add error handling for multipart parsing
+  - [ ] 2.3 Add error handling for multipart parsing
     - Return 400 for missing data field
     - Return 400 for invalid JSON in data field
     - Log descriptive error messages
     - _Requirements: 4.4_
   
-  - [x] 2.4 Add transfer metrics logging
+  - [ ] 2.4 Add transfer metrics logging
     - Log binary size when image received
     - Calculate theoretical base64 size
     - Log savings percentage
@@ -57,20 +57,20 @@
 - [ ] 3. Checkpoint - Ensure API accepts both formats
   - Ensure all tests pass, ask the user if questions arise.
 
-- [x] 4. Update canvas submission to use multipart
-  - [x] 4.1 Modify useCanvasPlugin onSubmit handler
+- [ ] 4. Update canvas submission to use multipart
+  - [ ] 4.1 Modify useCanvasPlugin onSubmit handler
     - Import binary utility functions
     - Convert base64 imageData to Blob
     - Create FormData with image and message data
     - _Requirements: 2.2, 3.1_
   
-  - [x] 4.2 Update sendMessage to support FormData
+  - [ ] 4.2 Update sendMessage to support FormData
     - Modify transport to handle FormData body
     - Set appropriate Content-Type header (let browser set boundary)
     - Handle response parsing
     - _Requirements: 3.4_
   
-  - [x] 4.3 Add fallback to JSON on multipart failure
+  - [ ] 4.3 Add fallback to JSON on multipart failure
     - Catch errors during FormData construction
     - Fall back to original base64 JSON approach
     - Log warning when fallback is used
@@ -80,13 +80,13 @@
     - **Property 6: Binary data type on web layer**
     - **Validates: Requirements 2.1, 2.2**
 
-- [x] 5. Update iOS native layer for metrics
-  - [x] 5.1 Add imageBinarySize to CanvasResult
+- [ ] 5. Update iOS native layer for metrics
+  - [ ] 5.1 Add imageBinarySize to CanvasResult
     - Include binary size in plugin response
     - Update delegate method signature if needed
     - _Requirements: 1.4, 5.1_
   
-  - [x] 5.2 Add transfer metrics logging in Swift
+  - [ ] 5.2 Add transfer metrics logging in Swift
     - Log binary size when image is generated
     - Calculate and log theoretical base64 size
     - Log savings percentage
@@ -96,13 +96,13 @@
     - **Property 1: PNG format preservation**
     - **Validates: Requirements 1.2, 6.2**
 
-- [x] 6. Update TypeScript definitions
-  - [x] 6.1 Add imageBinarySize to CanvasResult interface
+- [ ] 6. Update TypeScript definitions
+  - [ ] 6.1 Add imageBinarySize to CanvasResult interface
     - Update definitions.ts with new optional field
     - Add JSDoc documentation
     - _Requirements: 1.4_
   
-  - [x] 6.2 Export binary utility types
+  - [ ] 6.2 Export binary utility types
     - Export TransferMetrics interface if needed
     - Ensure types are available for consumers
     - _Requirements: 2.1_

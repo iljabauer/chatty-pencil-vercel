@@ -1,14 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Canvas, type CanvasResult } from './canvas-plugin';
-import { base64ToBlob, createMultipartFormData } from './binary-utils';
 
 export interface UseCanvasPluginOptions {
   /**
    * Callback when canvas is submitted with image data
-   * @param imageData - Base64 data URL of the canvas image
-   * @param formData - Optional FormData for multipart requests (when available)
    */
-  onSubmit?: (imageData: string, formData?: FormData) => void;
+  onSubmit?: (imageData: string) => void;
   
   /**
    * Callback when canvas is minimized (preserving content)
@@ -92,21 +89,7 @@ export function useCanvasPlugin(options: UseCanvasPluginOptions = {}): UseCanvas
       switch (result.action) {
         case 'submitted':
           if (result.imageData) {
-            try {
-              // Convert base64 imageData to Blob
-              const imageBlob = base64ToBlob(result.imageData);
-              
-              // Create FormData with image and empty message data
-              const messageData = { text: '', files: [] };
-              const formData = createMultipartFormData(imageBlob, messageData);
-              
-              // Call onSubmit with both base64 (for fallback) and FormData
-              onSubmit?.(result.imageData, formData);
-            } catch (error) {
-              console.warn('Failed to create FormData for canvas submission, falling back to base64:', error);
-              // Fallback to original base64 approach
-              onSubmit?.(result.imageData);
-            }
+            onSubmit?.(result.imageData);
           }
           // Canvas is cleared after submission
           setHasUnsavedContent(false);
@@ -159,21 +142,7 @@ export function useCanvasPlugin(options: UseCanvasPluginOptions = {}): UseCanvas
     
     const handleCanvasSubmitted = (event: CanvasResult) => {
       if (event.imageData) {
-        try {
-          // Convert base64 imageData to Blob
-          const imageBlob = base64ToBlob(event.imageData);
-          
-          // Create FormData with image and empty message data
-          const messageData = { text: '', files: [] };
-          const formData = createMultipartFormData(imageBlob, messageData);
-          
-          // Call onSubmit with both base64 (for fallback) and FormData
-          onSubmit?.(event.imageData, formData);
-        } catch (error) {
-          console.warn('Failed to create FormData for canvas event, falling back to base64:', error);
-          // Fallback to original base64 approach
-          onSubmit?.(event.imageData);
-        }
+        onSubmit?.(event.imageData);
       }
       setHasUnsavedContent(false);
       setIsCanvasOpen(false);

@@ -66,105 +66,31 @@ const ChatBotDemo = () => {
     }),
   });
   
-  // Custom sendMessage function that can handle FormData
-  const sendMessageWithFormData = async (formData: FormData, additionalBody?: Record<string, any>) => {
-    try {
-      console.log('Sending multipart request with FormData');
-      
-      // Add model and other body data to FormData
-      const dataJson = formData.get('data') as string;
-      const data = JSON.parse(dataJson);
-      
-      // Build a proper messages array for the API
-      // The image will be attached by the server from the FormData
-      const userMessage = {
-        id: crypto.randomUUID(),
-        role: 'user',
-        content: data.text || '',
-        parts: [{ type: 'text', text: data.text || '' }]
-      };
-      
-      const mergedData = { 
-        ...data, 
-        ...additionalBody, 
-        model,
-        messages: [userMessage]
-      };
-      formData.set('data', JSON.stringify(mergedData));
-      
-      const response = await fetch(`${API_BASE_URL}/api/chat`, {
-        method: 'POST',
-        headers: {
-          'x-api-key': API_KEY,
-          // Don't set Content-Type - let browser set it with boundary
-        },
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-      
-      // Handle streaming response manually
-      // For now, we'll just log success and fall back to regular sendMessage
-      // A full implementation would need to parse the streaming response
-      console.log('Multipart request successful');
-      return true;
-    } catch (error) {
-      console.warn('Multipart request failed, falling back to JSON:', error);
-      return false;
-    }
-  };
-
   // Canvas plugin integration
   const { openCanvas, clearCanvas, hasUnsavedContent, isCanvasOpen } = useCanvasPlugin({
-    onSubmit: async (imageData, formData) => {
+    onSubmit: (imageData) => {
       console.log('Canvas submitted with image data length:', imageData.length);
       
-      let multipartSuccess = false;
+      // Convert base64 PNG to proper file attachment format
+      const canvasFile = {
+        type: 'file' as const,
+        url: imageData, // Base64 data URL (data:image/png;base64,...)
+        mediaType: 'image/png',
+        filename: 'canvas-drawing.png',
+      };
       
-      // Try multipart approach first if FormData is available
-      if (formData) {
-        try {
-          multipartSuccess = await sendMessageWithFormData(formData);
-          if (multipartSuccess) {
-            console.log('Successfully sent multipart request');
-          }
-        } catch (error) {
-          console.warn('Error during multipart request:', error);
-        }
-      } else {
-        console.log('No FormData available, skipping multipart attempt');
-      }
-      
-      // Always use regular sendMessage to maintain UI functionality
-      // This ensures the message appears in the chat and streaming works
-      try {
-        const canvasFile = {
-          type: 'file' as const,
-          url: imageData,
-          mediaType: 'image/png',
-          filename: 'canvas-drawing.png',
-        };
-        
-        console.log(multipartSuccess ? 'Using JSON as UI fallback' : 'Using JSON as primary method');
-        
-        sendMessage(
-          { 
-            text: '',
-            files: [canvasFile]
+      // Send the image as a message attachment (no text, just the image)
+      sendMessage(
+        { 
+          text: '',
+          files: [canvasFile]
+        },
+        {
+          body: {
+            model: model
           },
-          {
-            body: {
-              model: model
-            },
-          },
-        );
-      } catch (error) {
-        console.error('Failed to send message via JSON fallback:', error);
-        // Could show user error notification here
-      }
+        },
+      );
       
       // Canvas state is automatically cleared after successful submission
       // as handled by the useCanvasPlugin hook
